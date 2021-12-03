@@ -12,12 +12,12 @@ function MemoPage({ id }) {
         <title>{memo.title} - wassのメモ書き</title>
       </Head>
       <nav>
-        <Link href="/">
+        <Link href="/" passHref>
           <span>メモ書き</span>
         </Link>
         {" > "}
         {memo.tags.map((tag) => (
-          <Link href={`/tags/${tag}`}>
+          <Link key={tag} href={`/tags/${tag}`} passHref>
             <span>{tag + " "}</span>
           </Link>
         ))}
@@ -28,12 +28,12 @@ function MemoPage({ id }) {
       </div>
       <memo.body></memo.body>
       <aside>
-        <Link href="/">
+        <Link href="/" passHref>
           <h1>他のメモ</h1>
         </Link>
         {memos.memos.map((memo) => {
           return (
-            <Link href={`/${memo.id}`}>
+            <Link key={memo.id} href={`/${memo.id}`} passHref>
               <div key={memo.id}>
                 <h2>{memo.title}</h2>
               </div>

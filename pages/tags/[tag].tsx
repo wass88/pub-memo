@@ -21,7 +21,7 @@ function TagPage({ tag }) {
       <div>
         {tagged.map((memo) => {
           return (
-            <Link href={`/${memo.id}`}>
+            <Link key={memo.id} href={`/${memo.id}`}>
               <div key={memo.id}>
                 <h2>{memo.title}</h2>
               </div>
@@ -32,7 +32,7 @@ function TagPage({ tag }) {
       <aside>
         <h2>他のタグ</h2>
         {memos.tags().map((t) => (
-          <Link href={`/tags/${t}`}>
+          <Link key={t} href={`/tags/${t}`}>
             <span>{t} </span>
           </Link>
         ))}
