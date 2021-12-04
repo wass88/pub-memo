@@ -11,7 +11,6 @@ export async function getStaticProps() {
 }
 
 export default function Home({}) {
-  const [msg, setMsg] = useState("hello");
   return (
     <FullPage>
       <Head>
@@ -22,12 +21,13 @@ export default function Home({}) {
       <h1>メモ書きたち</h1>
       {memos.memos.map((memo) => {
         return (
-          <Link key={memo.id} href={`/${memo.id}`}>
+          <Link key={memo.id} href={`/${memo.id}`} passHref>
             <div>
               <h2>
                 {memo.title}
                 <span>{memo.id}</span>
               </h2>
+              <p>{memo.summary}</p>
             </div>
           </Link>
         );

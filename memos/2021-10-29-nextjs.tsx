@@ -34,6 +34,7 @@ x.map(a =>  a * a);
 const page: BlogPage = {
   id: "2021-10-29-next-js",
   title: "メモ構築にnextjsを使う",
+  summary: "nextjsのSSGで静的ブログを書く。Markdownではなく、生のReactで",
   tags: ["js", "nextjs"],
   body: Body,
 };

@@ -8,7 +8,7 @@ function MemoPage({ id }) {
   return (
     <FullPage>
       <Head>
-        <meta name="description" content={`{memo.title} メモ書きたち`} />
+        <meta name="description" content={`${memo.title} -- ${memo.summary}`} />
         <title>{memo.title} - wassのメモ書き</title>
       </Head>
       <nav>
