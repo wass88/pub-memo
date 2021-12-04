@@ -9,6 +9,7 @@ function MemoPage({ id }) {
     <FullPage>
       <Head>
         <meta name="description" content={`${memo.title} -- ${memo.summary}`} />
+        <meta name="date" content={memo.id.match(/\d+-\d+-\d+/)[0]} />
         <title>{memo.title} - wassのメモ書き</title>
       </Head>
       <nav>
