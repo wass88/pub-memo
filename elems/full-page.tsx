@@ -13,7 +13,7 @@ export default function FullPage({ children }) {
           name="format-detection"
           content="telephone=no,address=no,email=no"
         />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <title>wassのメモ書き</title>
         <meta name="description" content="wassのメモ書き" />
         <link
