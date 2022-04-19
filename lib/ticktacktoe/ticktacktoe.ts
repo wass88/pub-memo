@@ -6,32 +6,22 @@ export type Action = {
 export class State {
     rank: number;
     record: Action[];
-    board(): Board {
-        return new Board(this.rank)
-    }
+    first: boolean;
+    board: number[];
+    lastMoves: number[];
     constructor(rank: number) {
         this.rank = rank;
         this.record = [];
-    }
-    playable(): number[]{
-
-    }
-}
-
-export class Board {
-    rank: number;
-    first: boolean;
-    board: number[];
-    constructor(rank: number) {
-        this.rank = rank;
         this.first = true;
         const length = Math.pow(9, rank)
         this.board = Array(length).fill(0)
     }
-    playable(): number[] {
-        
+    playable(): number[]{
+
     }
-    bfs(node: number, r: number): number[] {
-        
+    bfs(node: number, r: number): {winner: number, playable: boolean} [] {
+        if (this.isLeaf(node)) {
+
+        }
     }
 }
