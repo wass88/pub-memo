@@ -42,6 +42,9 @@ export default function FullPage({ children }) {
             "Yu Gothic Medium", YuGothic, "メイリオ", sans-serif;
           font-size: 16px;
           line-height: 2;
+          color: #eee;
+          height: 100vh;
+          background: linear-gradient(137deg, #111, #222);
         }
         h1 {
           font-size: 200%;

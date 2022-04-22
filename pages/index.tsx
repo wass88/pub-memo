@@ -28,6 +28,7 @@ export default function Home({}) {
                 <span>{memo.id}</span>
               </h2>
               <p>{memo.summary}</p>
+              <p>{memo.tags}</p>
             </div>
           </Link>
         );

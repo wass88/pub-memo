@@ -42,6 +42,11 @@ function MemoPage({ id }) {
           );
         })}
       </aside>
+      <style jsx>{`
+        nav {
+          margin-top: 32px;
+        }
+      `}</style>
     </FullPage>
   );
 }
