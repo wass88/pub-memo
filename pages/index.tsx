@@ -19,7 +19,7 @@ export default function Home({}) {
       </Head>
 
       <h1>メモ書きたち</h1>
-      {memos.memos.map((memo) => {
+      {memos.getAll().map((memo) => {
         return (
           <Link key={memo.id} href={`/${memo.id}`} passHref>
             <div>

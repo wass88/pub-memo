@@ -32,7 +32,7 @@ function MemoPage({ id }) {
         <Link href="/" passHref>
           <h1>他のメモ</h1>
         </Link>
-        {memos.memos.map((memo) => {
+        {memos.getAll().map((memo) => {
           return (
             <Link key={memo.id} href={`/${memo.id}`} passHref>
               <div key={memo.id}>
@@ -54,7 +54,7 @@ export default MemoPage;
 
 export async function getStaticPaths() {
   return {
-    paths: memos.memos.map((b) => {
+    paths: memos.getAll().map((b) => {
       return {
         params: {
           id: b.id,
