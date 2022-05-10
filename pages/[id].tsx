@@ -1,7 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import FullPage from "../elems/full-page";
-import memos from "../lib/memos";
+import memos, { getDate } from "../lib/memos";
+import { MemoList } from "../elems/memo-card";
 
 function MemoPage({ id }) {
   const memo = memos.get(id);
@@ -9,40 +10,31 @@ function MemoPage({ id }) {
     <FullPage>
       <Head>
         <meta name="description" content={`${memo.title} -- ${memo.summary}`} />
-        <meta name="date" content={memo.id.match(/\d+-\d+-\d+/)[0]} />
+        <meta name="date" content={getDate(memo)} />
         <title>{memo.title} - wassのメモ書き</title>
       </Head>
-      <nav>
-        <Link href="/" passHref>
-          <span>メモ書き</span>
-        </Link>
-        {" > "}
-        {memo.tags.map((tag) => (
-          <Link key={tag} href={`/tags/${tag}`} passHref>
-            <span>{tag + " "}</span>
-          </Link>
-        ))}
-      </nav>
-      <h1>{memo.title}</h1>
-      <div>
-        <span>{memo.id}</span>
+      <Link href={`.`} passHref>
+        <a>
+          <h1>{memo.title}</h1>
+        </a>
+      </Link>
+      <div className="sub-info">
+        <span>公開日: {getDate(memo)}</span>
       </div>
       <memo.body></memo.body>
       <aside>
         <Link href="/" passHref>
-          <h1>他のメモ</h1>
+          <a>
+            <h1>他の記事</h1>
+          </a>
         </Link>
-        {memos.getAll().map((memo) => {
-          return (
-            <Link key={memo.id} href={`/${memo.id}`} passHref>
-              <div key={memo.id}>
-                <h2>{memo.title}</h2>
-              </div>
-            </Link>
-          );
-        })}
+        <MemoList memos={memos.getAll()}></MemoList>
       </aside>
       <style jsx>{`
+        .sub-info {
+          margin: -36px 0 16px 0;
+          font-size: 75%;
+        }
         nav {
           margin-top: 32px;
         }

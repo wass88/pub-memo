@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import FullPage from "../../elems/full-page";
 import memos from "../../lib/memos";
+import { MemoList, Tags } from "../../elems/memo-card";
 
 function TagPage({ tag }) {
   const tagged = memos.getByTag(tag);
@@ -11,31 +12,23 @@ function TagPage({ tag }) {
         <meta name="description" content={`タグ {tag} メモ書きたち`} />
         <title>タグ: {tag} - wassのメモ書き</title>
       </Head>
-      <nav>
-        <Link href="/">
-          <span>メモ書き</span>
-        </Link>
-        {" > タグ "} {tag}
-      </nav>
-      <h1>タグ「{tag}」のメモ書き</h1>
+      <h1>タグ「{tag}」</h1>
       <div>
-        {tagged.map((memo) => {
-          return (
-            <Link key={memo.id} href={`/${memo.id}`}>
-              <div key={memo.id}>
-                <h2>{memo.title}</h2>
-              </div>
-            </Link>
-          );
-        })}
+        <MemoList memos={tagged} />
       </div>
       <aside>
         <h2>他のタグ</h2>
-        {memos.tags().map((t) => (
-          <Link key={t} href={`/tags/${t}`}>
-            <span>{t} </span>
-          </Link>
-        ))}
+        <style jsx>{`
+          h2 {
+            margin-top: 16px;
+          }
+        `}</style>
+        <Tags tags={memos.tags()}></Tags>
+        <Link href="/">
+          <a>
+            <h2>全記事を見る</h2>
+          </a>
+        </Link>
       </aside>
     </FullPage>
   );

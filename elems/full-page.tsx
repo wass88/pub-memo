@@ -26,36 +26,73 @@ export default function FullPage({ children }) {
         <main>{children}</main>
       </div>
 
-      <style jsx>{`
-        .inner {
-          max-width: 640px;
-          margin: 0 auto;
-        }
-      `}</style>
-
       <style jsx global>{`
-        html,
-        body {
+        * {
+          box-sizing: border-box;
           padding: 0;
           margin: 0;
+        }
+        :root {
+          --main-color: #369757;
+          --sub-light-color: #8abd43;
+          --sub-dark-color: #316d81;
+          --sub-light-lightest: #e8f4d9;
+
+          --fg-color: var(--sub-light-lightest);
+          --bg-color: #202020;
+
+          --jump: 16px;
+        }
+        html {
           font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic Pro",
             "Yu Gothic Medium", YuGothic, "メイリオ", sans-serif;
-          font-size: 16px;
+          font-size: var(--jump);
           line-height: 2;
-          color: #eee;
+          color: var(--fg-color);
+          background: #111;
+        }
+        body {
           height: 100vh;
           background: linear-gradient(137deg, #111, #222);
         }
         h1 {
-          font-size: 200%;
+          font-size: 400%;
+          line-height: 1.25;
+          font-weight: bold;
+          padding: calc(3 * var(--jump)) 0;
+          --stripe-color: var(--sub-dark-color);
+          background-color: var(--main-color);
+          background-image: linear-gradient(
+            90deg,
+            transparent 50%,
+            var(--stripe-color) 50%
+          );
+          background-size: 5px 10px;
+          background-clip: text;
+          color: transparent;
+          margin-top: -8px;
+          margin-bottom: -36px;
         }
         h2 {
           font-size: 150;
         }
-        * {
-          box-sizing: border-box;
+        .inner {
+          max-width: 960px;
+          margin: 0 auto;
         }
-        .container {
+        @media screen and (max-width: 960px) {
+          .inner {
+            padding: 0 16px;
+          }
+        }
+        a {
+          text-decoration: inherit;
+        }
+        a:hover {
+          color: inherit;
+        }
+        a:visited {
+          color: inherit;
         }
       `}</style>
     </div>
