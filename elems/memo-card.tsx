@@ -17,24 +17,26 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               border-radius: 12px;
               color: var(--bg-color);
               cursor: pointer;
-              padding-bottom: 8px;
+              padding: 0 12px 12px 12px;
               display: flex;
               flex-flow: column;
             }
             .card h2 {
+              margin: 0 -12px 0 -12px;
               line-height: 1.25;
               background: var(--main-color);
               padding: 16px;
               border-radius: 12px 12px 0 0;
               color: var(--fg-color);
               font-weight: bold;
-              text-shadow: 1px 1px var(--main-color);
+              text-shadow: 1px 1px var(--sub-dark-color);
             }
             .card:hover {
               transform: translate(2px, 2px);
             }
             p {
-              margin: 16px 0 16px 16px;
+              margin: 12px 0 12px 0;
+              opacity: 80%;
             }
             @media screen and (max-width: 960px) {
               .card {
@@ -53,7 +55,9 @@ export function Tags({ tags }) {
     <div className="tags">
       {tags.map((tag) => (
         <Link key={tag} href={`/tags/${tag}`} passHref>
-          <div className="chip">{tag}</div>
+          <a>
+            <div className="chip">{tag}</div>
+          </a>
         </Link>
       ))}
       <style jsx>{`
@@ -61,14 +65,14 @@ export function Tags({ tags }) {
           display: flex;
           flex-flow: row wrap;
           gap: 8px;
-          margin: 0 12px 12px 12px;
         }
         .chip {
           padding: 2px 16px;
           font-weight: bold;
-          border-radius: 10px;
+          border-radius: 24px;
           color: var(--fg-color);
           background: var(--sub-light-color);
+          text-shadow: 1px 1px var(--main-color);
         }
         .chip:hover {
           transform: scale(1.1);
