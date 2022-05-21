@@ -7,7 +7,7 @@
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch"
+    "test": "jest --watch --silent=false --verbose false"
   },
   "dependencies": {
     "katex": "^0.15.1",
