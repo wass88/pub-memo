@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from "react";
 import Image from "next/image";
+import css from "styled-jsx/css";
 
 export function Tips(props) {
   return <div className="tips">{props.children}</div>;
@@ -13,7 +14,39 @@ export function Btn(props) {
   const touch = () =>
     window.ontouchstart !== null && navigator.maxTouchPoints > 0;
   const [pushed, setPushed] = useState(() => false);
-  return (
+
+  const style = css`
+    button {
+      background: var(--main-color);
+      color: var(--fg-color);
+      font-weight: bold;
+      text-shadow: 1px 1px var(--sub-dark-color);
+      font-size: 16px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--sub-dark-color);
+      box-shadow: 1px 1px var(--sub-dark-color), 2px 2px var(--sub-dark-color),
+        3px 3px var(--sub-dark-color);
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) {
+      box-shadow: 1px 1px var(--sub-dark-color), 2px 2px var(--sub-dark-color);
+      transform: translate(1px, 1px);
+    }
+    button.pushed {
+      box-shadow: none;
+      transform: translate(3px, 3px);
+    }
+    button:disabled {
+      filter: grayscale(80%);
+    }
+  `;
+  const disabledBtn = (
+    <button disabled>
+      {props.children} <style jsx>{style}</style>
+    </button>
+  );
+  const btn = (
     <button
       disabled={props.disabled}
       onClick={(e) => {
@@ -39,31 +72,8 @@ export function Btn(props) {
       }}
       className={`${pushed ? "pushed" : ""}`}
     >
-      {props.children}
-      <style jsx>{`
-        button {
-          background: var(--main-color);
-          color: var(--fg-color);
-          font-weight: bold;
-          text-shadow: 1px 1px var(--sub-dark-color);
-          font-size: 16px;
-          padding: 4px 8px;
-          border-radius: 20px;
-          border: 1px solid var(--sub-dark-color);
-          box-shadow: 1px 1px var(--sub-dark-color),
-            2px 2px var(--sub-dark-color), 3px 3px var(--sub-dark-color);
-          cursor: pointer;
-        }
-        button:hover {
-          box-shadow: 1px 1px var(--sub-dark-color),
-            2px 2px var(--sub-dark-color);
-          transform: translate(1px, 1px);
-        }
-        button.pushed {
-          box-shadow: none;
-          transform: translate(3px, 3px);
-        }
-      `}</style>
+      {props.children} <style jsx>{style}</style>
     </button>
   );
+  return props.disabled ? disabledBtn : btn;
 }

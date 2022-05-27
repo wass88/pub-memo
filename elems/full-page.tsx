@@ -80,6 +80,9 @@ export default function FullPage({ children }) {
           max-width: 960px;
           margin: 0 auto;
         }
+        p {
+          margin-block-end: 1rem;
+        }
         @media screen and (max-width: 960px) {
           .inner {
             padding: 0 16px;

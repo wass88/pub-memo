@@ -35,6 +35,7 @@ function Cell({
           background: #111;
           text-align: center;
           line-height: 22px;
+          font-weight: bold;
         }
         .playable {
           cursor: pointer;
@@ -107,6 +108,7 @@ function View({
           .top {
             padding: 4px;
             border-radius: 4px;
+            width: fit-content;
           }
           .first {
             border: 1px solid red;
@@ -123,29 +125,43 @@ function View({
   );
 }
 
-type Action = {
-  type: "play";
-  pos: number[];
-  first: boolean;
-};
+type Action =
+  | {
+      type: "play";
+      pos: number[];
+      first: boolean;
+    }
+  | {
+      type: "init";
+      config: T.Config;
+    };
 function useTicTacToeReducer(): [
-  { board: T.View; first: boolean; record: T.Action[] },
+  { board: T.View; first: boolean; record: T.Action[]; config: T.Config },
   (a: Action) => void
 ] {
-  const state = useRef(new T.State({ rank: 3 }));
+  const initConfig = { rank: 3 };
+  const state = useRef(new T.State(initConfig));
   const [view, setView] = useState({
     board: state.current.view(),
     first: state.current.first,
     record: state.current.record,
+    config: initConfig,
   });
   const action = (action: Action) => {
-    if (action.type === "play") {
-      state.current.play({ pos: action.pos, first: action.first });
+    const update = () => {
       setView({
         board: state.current.view(),
         first: state.current.first,
         record: state.current.record,
+        config: state.current.config,
       });
+    };
+    if (action.type === "play") {
+      state.current.play({ pos: action.pos, first: action.first });
+      update();
+    } else if (action.type === "init") {
+      state.current = new T.State(action.config);
+      update();
     }
   };
 
@@ -163,26 +179,49 @@ export function TicTacToe({}) {
       "ひきわけ"
     ) : (
       <>
-        <Cell piece={state.board.result}></Cell> の勝利
+        <Cell piece={state.board.result}></Cell> の勝利。再読み込みで再戦
       </>
     );
   const otherMode =
     state.record.length === 0 ? (
-      <Btn onClick={() => alert("XSS")}>次元を下げる</Btn>
+      <p>
+        <Btn
+          onClick={() =>
+            action({
+              type: "init",
+              config: { ...state.config, rank: state.config.rank - 1 },
+            })
+          }
+          disabled={state.config.rank <= 1}
+        >
+          次元を下げる
+        </Btn>{" "}
+        <Btn
+          onClick={() =>
+            action({
+              type: "init",
+              config: { ...state.config, rank: state.config.rank + 1 },
+            })
+          }
+          disabled={state.config.rank >= 5}
+        >
+          次元を上げる {state.config.rank === 4 ? "（非推奨）" : ""}
+        </Btn>
+      </p>
     ) : (
       <></>
     );
 
   return (
     <div>
+      {otherMode}
+      <p>{message}</p>
       <View
         board={state.board}
         action={action}
         first={state.first}
         top={true}
       ></View>
-      {otherMode}
-      <p>{message}</p>
     </div>
   );
 }
