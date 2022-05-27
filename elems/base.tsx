@@ -1,5 +1,4 @@
-import React, { useReducer, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import css from "styled-jsx/css";
 
 export function Tips(props) {
@@ -7,7 +6,7 @@ export function Tips(props) {
 }
 
 export function Img(props: { src: any; alt: string }) {
-  return <Image src={props.src} alt={props.alt} className="blog-image"></Image>;
+  return <img src={props.src} alt={props.alt} className="blog-image"></img>;
 }
 
 export function Btn(props) {

@@ -3,7 +3,7 @@ import memos from "../lib/memo-data";
 import React, { useReducer } from "react";
 import Code from "../elems/code";
 import Math from "../elems/math";
-import { Tips, Img } from "../elems/base";
+import { Tips } from "../elems/base";
 
 const Body = () => {
   const [count, increment] = useReducer((x) => x + 1, 0);
@@ -12,7 +12,6 @@ const Body = () => {
       <h2></h2>
       <h3></h3>
       <Tips></Tips>
-      <Img></Img>
     </>
   );
 };

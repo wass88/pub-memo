@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Btn } from "../../elems/base";
 import * as T from "./ticktacktoe";
 
@@ -182,6 +182,16 @@ export function TicTacToe({}) {
         <Cell piece={state.board.result}></Cell> の勝利。再読み込みで再戦
       </>
     );
+  useEffect(() => {
+    const preventUnload = (e) => {
+      alert("pe");
+      if (state.record.length > 0 && state.board.result !== T.Piece.Blank) {
+        e.returnValue = "試合中ですが、本当に閉じますか？";
+      }
+    };
+    window.addEventListener("beforeunload", preventUnload);
+    return () => window.removeEventListener("beforeunload", preventUnload);
+  }, [state]);
   const otherMode =
     state.record.length === 0 ? (
       <p>

@@ -1,10 +1,38 @@
 import Head from "next/head";
-import Link from "next/link";
-import memos from "../lib/memos";
-import { useState } from "react";
 
+export function IconEmoji({ emoji }: { emoji: string }) {
+  return (
+    <Head>
+      <link
+        key="icon"
+        rel="icon"
+        href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${
+          emoji || "✍"
+        }</text></svg>`}
+      ></link>
+    </Head>
+  );
+}
+export function Descriptions({
+  title,
+  description,
+  emoji,
+}: {
+  title: string;
+  description: string;
+  emoji?: string;
+}) {
+  return (
+    <>
+      <Head>
+        <title key="title">{title}</title>
+        <meta key="description" name="description" content={description} />
+      </Head>
+      <IconEmoji emoji={emoji}></IconEmoji>
+    </>
+  );
+}
 export default function FullPage({ children }) {
-  const [msg, setMsg] = useState("hello");
   return (
     <div className="container">
       <Head>
@@ -14,13 +42,12 @@ export default function FullPage({ children }) {
           content="telephone=no,address=no,email=no"
         />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <title>wassのメモ書き</title>
-        <meta name="description" content="wassのメモ書き" />
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤣</text></svg>"
-        ></link>
       </Head>
+      <Descriptions
+        title="wassのメモ書き"
+        description="wassのメモ書き一覧"
+        emoji="✍"
+      ></Descriptions>
 
       <div className="inner">
         <main>{children}</main>
