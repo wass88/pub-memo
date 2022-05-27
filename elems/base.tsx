@@ -86,7 +86,9 @@ export function Btn(props) {
     <button
       disabled={props.disabled}
       onClick={(e) => {
-        if (!touch()) props.onClick(e);
+        if (!touch()) {
+          props.onClick(e);
+        }
       }}
       onMouseDown={(e) => {
         setPushed(true);
@@ -101,7 +103,7 @@ export function Btn(props) {
         setPushed(true);
       }}
       onTouchEnd={(e) => {
-        if (pushed) {
+        if (pushed && touch()) {
           props.onClick(e);
         }
         setPushed(false);
