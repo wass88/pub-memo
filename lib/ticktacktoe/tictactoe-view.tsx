@@ -179,7 +179,7 @@ export function TicTacToe({}) {
       "引き分けです。"
     ) : (
       <>
-        <Cell piece={state.board.result}></Cell> の勝利。再読み込みで再戦です。
+        <Cell piece={state.board.result}></Cell> の勝利。
       </>
     );
   const notStarted = state.record.length === 0;
