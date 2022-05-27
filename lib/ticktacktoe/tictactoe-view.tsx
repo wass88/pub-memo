@@ -194,6 +194,17 @@ export function TicTacToe({}) {
     window.addEventListener("beforeunload", preventUnload);
     return () => window.removeEventListener("beforeunload", preventUnload);
   }, [notStarted, gameEnd]);
+  const firstBot = state.bots[0] !== null;
+  const secondBot = state.bots[1] !== null;
+  const msgBot = (f, s) => (firstBot ? f : secondBot ? s : "");
+  const winMsg = "あなたの勝ち";
+  const loseMsg = "あなたの負け";
+  const winnerMsg =
+    state.board.result === T.Piece.First
+      ? msgBot(loseMsg, winMsg)
+      : state.board.result === T.Piece.Second
+      ? msgBot(winMsg, loseMsg)
+      : "";
   const message =
     state.board.result === T.Piece.Blank ? (
       <>
@@ -205,6 +216,7 @@ export function TicTacToe({}) {
     ) : (
       <>
         <Cell piece={state.board.result}></Cell> の勝利。
+        {winnerMsg}
       </>
     );
   const otherMode = notStarted ? (
