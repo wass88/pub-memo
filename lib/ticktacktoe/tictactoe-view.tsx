@@ -238,7 +238,7 @@ export function TicTacToe({}) {
           action({
             type: "init",
             config: state.config,
-            bots: [null, T.RandomAgent],
+            bots: [null, T.MinOpoAgent],
           })
         }
         disabled={state.bots[1] != null}
@@ -250,7 +250,7 @@ export function TicTacToe({}) {
           action({
             type: "init",
             config: state.config,
-            bots: [T.RandomAgent, null],
+            bots: [T.MinOpoAgent, null],
           })
         }
         disabled={state.bots[0] != null}

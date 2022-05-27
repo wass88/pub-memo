@@ -26,6 +26,7 @@ const Body = () => {
           </li>
         </ul>
         <li>ただし、どこにも配置できないときは、どこでも配置可能。</li>
+        <li>Botはかなり素朴な子。</li>
         <li>
           <A href="https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%80%87%C3%97%E3%82%B2%E3%83%BC%E3%83%A0">
             元ネタ: スーパー〇×ゲーム Wikipedia

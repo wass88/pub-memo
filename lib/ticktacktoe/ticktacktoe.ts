@@ -241,6 +241,13 @@ export class State {
   end(): boolean {
     return this.bfs().result !== Piece.Blank;
   }
+  clone(): State {
+    const state = new State(this.config);
+    state.board = this.board.map((s) => s);
+    state.first = this.first;
+    state.record = this.record.map((s) => s);
+    return state;
+  }
 }
 
 export type Agent = {
@@ -255,6 +262,65 @@ export const RandomAgent = {
     if (playable.length === 0) return null;
     const i = 0 | (Math.random() * playable.length);
     return playable[i];
+  },
+};
+
+export const MinMovesAgent = {
+  name: "random",
+  action(state: State): Action {
+    const playable = state.playable();
+    if (playable.length > 81) {
+      return RandomAgent.action(state);
+    }
+    if (playable.length === 0) return null;
+    const mins = playable.map<[Action, number]>((a) => {
+      const s = state.clone();
+      s.play(a);
+      if (s.end()) {
+        return [a, 0];
+      }
+      return [a, s.playable().length];
+    });
+    console.log(mins);
+    mins.sort(([_a, a], [_b, b]) => a - b);
+    const min = mins.filter(([_, n]) => n === mins[0][1]);
+    return mins[0 | (Math.random() * min.length)][0];
+  },
+};
+
+export function pieceOf(first: boolean): Piece {
+  return first ? Piece.First : Piece.Second;
+}
+
+export const MinOpoAgent = {
+  name: "random",
+  action(state: State): Action {
+    const playable = state.playable();
+    if (playable.length === 0) return null;
+    if (playable.length > 81) {
+      return RandomAgent.action(state);
+    }
+    const mins = playable.map<[Action, number]>((a) => {
+      const s = state.clone();
+      s.play(a);
+      if (s.end()) {
+        return [a, 0];
+      }
+      const view = s.view();
+
+      const playable = s.playable();
+      if (playable.length > 9) {
+        return [a, 10];
+      }
+      const leaf = playable[0].pos
+        .slice(0, playable[0].pos.length - 1)
+        .reduce((v, p) => (v as BfsNode).board[p], view) as BfsNode;
+      const ops = leaf.board.filter((b) => b.result === pieceOf(s.first));
+      return [a, ops.length];
+    });
+    mins.sort(([_a, a], [_b, b]) => a - b);
+    const min = mins.filter(([_, n]) => n === mins[0][1]);
+    return mins[0 | (Math.random() * min.length)][0];
   },
 };
 
