@@ -139,7 +139,7 @@ function useTicTacToeReducer(): [
   { board: T.View; first: boolean; record: T.Action[]; config: T.Config },
   (a: Action) => void
 ] {
-  const initConfig = { rank: 3 };
+  const initConfig = { rank: 2 };
   const state = useRef(new T.State(initConfig));
   const [view, setView] = useState({
     board: state.current.view(),
@@ -176,54 +176,67 @@ export function TicTacToe({}) {
         の手番
       </>
     ) : state.board.result === T.Piece.Draw ? (
-      "ひきわけ"
+      "引き分けです。"
     ) : (
       <>
-        <Cell piece={state.board.result}></Cell> の勝利。再読み込みで再戦
+        <Cell piece={state.board.result}></Cell> の勝利。再読み込みで再戦です。
       </>
     );
+  const notStarted = state.record.length === 0;
+  const gameEnd = state.board.result !== T.Piece.Blank;
   useEffect(() => {
     const preventUnload = (e) => {
-      alert("pe");
-      if (state.record.length > 0 && state.board.result !== T.Piece.Blank) {
+      if (!notStarted && !gameEnd) {
         e.returnValue = "試合中ですが、本当に閉じますか？";
       }
     };
     window.addEventListener("beforeunload", preventUnload);
     return () => window.removeEventListener("beforeunload", preventUnload);
-  }, [state]);
-  const otherMode =
-    state.record.length === 0 ? (
-      <p>
-        <Btn
-          onClick={() =>
-            action({
-              type: "init",
-              config: { ...state.config, rank: state.config.rank - 1 },
-            })
-          }
-          disabled={state.config.rank <= 1}
-        >
-          次元を下げる
-        </Btn>{" "}
-        <Btn
-          onClick={() =>
-            action({
-              type: "init",
-              config: { ...state.config, rank: state.config.rank + 1 },
-            })
-          }
-          disabled={state.config.rank >= 5}
-        >
-          次元を上げる {state.config.rank === 4 ? "（非推奨）" : ""}
-        </Btn>
-      </p>
-    ) : (
-      <></>
-    );
+  }, [notStarted, gameEnd]);
+  const otherMode = notStarted ? (
+    <p>
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: { ...state.config, rank: state.config.rank - 1 },
+          })
+        }
+        disabled={state.config.rank <= 1}
+      >
+        次元を下げる
+      </Btn>{" "}
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: { ...state.config, rank: state.config.rank + 1 },
+          })
+        }
+        disabled={state.config.rank >= 5}
+      >
+        次元を上げる {state.config.rank === 4 ? "（非推奨）" : ""}
+      </Btn>
+    </p>
+  ) : gameEnd ? (
+    <p>
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: state.config,
+          })
+        }
+      >
+        リセット
+      </Btn>
+    </p>
+  ) : (
+    <></>
+  );
 
   return (
-    <div>
+    <div className="cont">
       {otherMode}
       <p>{message}</p>
       <View
@@ -232,6 +245,11 @@ export function TicTacToe({}) {
         first={state.first}
         top={true}
       ></View>
+      <style jsx>{`
+        .cont {
+          margin-block-end: 1rem;
+        }
+      `}</style>
     </div>
   );
 }

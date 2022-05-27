@@ -3,7 +3,7 @@ import memos from "../lib/memo-data";
 import React, { useReducer } from "react";
 import Code from "../elems/code";
 import Math from "../elems/math";
-import { Btn } from "../elems/base";
+import { Btn, Img } from "../elems/base";
 
 const Body = () => {
   const [count, increment] = useReducer((x) => x + 1, 0);
@@ -29,13 +29,15 @@ x.map(a =>  a * a);
         f(\\hat\\xi)\\,e^{2 \\pi i \\xi x}
         \\,d\\xi
       `}</Math>
+      <Img src={require("./2021-10-29/cat.jpeg?trace")} alt="cat" block></Img>
     </>
   );
 };
 const page: BlogPage = {
   id: "2021-10-29-next-js",
   title: "メモ構築にnextjsを使う",
-  summary: "nextjsのSSGで静的ブログを書く。Markdownではなく、生のReactで。",
+  summary:
+    "nextjsのSSGで静的ブログを書く。Markdownではなく、生のReactでブログを書きたい。",
   tags: ["js", "nextjs"],
   body: Body,
 };

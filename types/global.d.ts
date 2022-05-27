@@ -12,3 +12,8 @@ declare module "*.jpeg" {
   const content: any;
   export default content;
 }
+
+declare module "*?trace" {
+  const content: any;
+  export default content;
+}

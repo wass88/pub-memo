@@ -3,6 +3,7 @@ import Link from "next/link";
 import FullPage, { Descriptions } from "../elems/full-page";
 import memos, { getDate } from "../lib/memos";
 import { MemoList } from "../elems/memo-card";
+import { A } from "../elems/base";
 
 function MemoPage({ id }) {
   const memo = memos.get(id);
@@ -22,6 +23,15 @@ function MemoPage({ id }) {
       </div>
       <memo.body></memo.body>
       <aside>
+        <p>
+          <A
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+              `${memo.title}\nhttps://memo.wass80.xyz/${id}`
+            )}`}
+          >
+            Twitterで共有する
+          </A>
+        </p>
         <Link href="/" passHref>
           <a>
             <h1>他の記事</h1>

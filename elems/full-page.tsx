@@ -76,11 +76,10 @@ export default function FullPage({ children }) {
           font-size: var(--jump);
           line-height: 2;
           color: var(--fg-color);
-          background: #111;
+          background: #151515;
         }
         body {
           height: 100vh;
-          background: linear-gradient(137deg, #111, #222);
         }
         h1 {
           font-size: 400%;
@@ -114,15 +113,26 @@ export default function FullPage({ children }) {
           .inner {
             padding: 0 16px;
           }
+          h1 {
+            font-size: 200%;
+          }
         }
         a {
           text-decoration: inherit;
+          color: inherit;
         }
         a:hover {
           color: inherit;
         }
         a:visited {
           color: inherit;
+        }
+        ul {
+          padding-inline-start: 1rem;
+          margin-block-end: 1rem;
+        }
+        ul > ul {
+          margin-block-end: 0;
         }
       `}</style>
     </div>

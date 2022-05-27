@@ -1,12 +1,49 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import css from "styled-jsx/css";
 
 export function Tips(props) {
   return <div className="tips">{props.children}</div>;
 }
 
-export function Img(props: { src: any; alt: string }) {
-  return <img src={props.src} alt={props.alt} className="blog-image"></img>;
+export function Img(props: { src: any; alt: string; block?: boolean }) {
+  const styles = css`
+    img.block {
+      display: block;
+      margin: 0 auto 1rem auto;
+      max-width: 100%;
+    }
+    img {
+      transition: opacity 1s;
+    }
+    img.hide {
+      opacity: 0.1;
+    }
+  `;
+  const trace = props.src.trace != null;
+  const [src, setSrc] = useState(trace ? props.src.trace : props.src);
+  const [hide, setHide] = useState(true);
+  useEffect(() => {
+    if (!trace) return;
+    const img = new Image();
+    img.src = props.src.src;
+    img.onload = () => {
+      setSrc(props.src.src);
+      setHide(false);
+    };
+  }, [props.src, trace]);
+  return (
+    <>
+      <img
+        src={src}
+        alt={props.alt}
+        className={`blog-image ${hide ? "hide" : ""} ${
+          props.block ? "block" : ""
+        }`}
+      ></img>
+      <style jsx>{styles}</style>
+    </>
+  );
 }
 
 export function Btn(props) {
@@ -14,7 +51,7 @@ export function Btn(props) {
     window.ontouchstart !== null && navigator.maxTouchPoints > 0;
   const [pushed, setPushed] = useState(() => false);
 
-  const style = css`
+  const styles = css`
     button {
       background: var(--main-color);
       color: var(--fg-color);
@@ -42,7 +79,7 @@ export function Btn(props) {
   `;
   const disabledBtn = (
     <button disabled>
-      {props.children} <style jsx>{style}</style>
+      {props.children} <style jsx>{styles}</style>
     </button>
   );
   const btn = (
@@ -71,8 +108,27 @@ export function Btn(props) {
       }}
       className={`${pushed ? "pushed" : ""}`}
     >
-      {props.children} <style jsx>{style}</style>
+      {props.children} <style jsx>{styles}</style>
     </button>
   );
   return props.disabled ? disabledBtn : btn;
+}
+
+export function A(props: { href: string; children: any }) {
+  return (
+    <a href={props.href} target="_blank" rel="noopener noreferrer">
+      {props.children}
+      <style jsx>
+        {`
+          a {
+            color: var(--main-fg-color);
+            text-shadow: 1px 1px var(--main-color);
+          }
+          a:hover {
+            text-shadow: 1px 1px var(--main-color), -1px -1px var(--main-color);
+          }
+        `}
+      </style>
+    </a>
+  );
 }
