@@ -69,7 +69,7 @@ export function Btn(props) {
       box-shadow: 1px 1px var(--sub-dark-color), 2px 2px var(--sub-dark-color);
       transform: translate(1px, 1px);
     }
-    button.pushed {
+    button.pushed:not(:disabled) {
       box-shadow: none;
       transform: translate(3px, 3px);
     }
@@ -91,7 +91,7 @@ export function Btn(props) {
       onMouseDown={(e) => {
         setPushed(true);
       }}
-      onMouseLeave={(e) => {
+      onMouseOut={(e) => {
         setPushed(false);
       }}
       onMouseUp={(e) => {

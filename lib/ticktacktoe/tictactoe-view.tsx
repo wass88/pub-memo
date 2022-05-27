@@ -204,7 +204,7 @@ export function TicTacToe({}) {
         }
         disabled={state.config.rank <= 1}
       >
-        次元を下げる
+        次元を減らす
       </Btn>{" "}
       <Btn
         onClick={() =>
@@ -215,7 +215,7 @@ export function TicTacToe({}) {
         }
         disabled={state.config.rank >= 5}
       >
-        次元を上げる {state.config.rank === 4 ? "（非推奨）" : ""}
+        次元を増やす {state.config.rank === 4 ? "（非推奨）" : ""}
       </Btn>
     </p>
   ) : gameEnd ? (
