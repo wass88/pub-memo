@@ -183,19 +183,6 @@ function useTicTacToeReducer(): [GameState, (a: Action) => void] {
 }
 export function TicTacToe({}) {
   const [state, action] = useTicTacToeReducer();
-  const message =
-    state.board.result === T.Piece.Blank ? (
-      <>
-        <Cell piece={state.first ? T.Piece.First : T.Piece.Second}></Cell>{" "}
-        の手番
-      </>
-    ) : state.board.result === T.Piece.Draw ? (
-      "引き分けです。"
-    ) : (
-      <>
-        <Cell piece={state.board.result}></Cell> の勝利。
-      </>
-    );
   const notStarted = state.record.length === 0;
   const gameEnd = state.board.result !== T.Piece.Blank;
   useEffect(() => {
@@ -207,6 +194,19 @@ export function TicTacToe({}) {
     window.addEventListener("beforeunload", preventUnload);
     return () => window.removeEventListener("beforeunload", preventUnload);
   }, [notStarted, gameEnd]);
+  const message =
+    state.board.result === T.Piece.Blank ? (
+      <>
+        <Cell piece={state.first ? T.Piece.First : T.Piece.Second}></Cell>{" "}
+        の手番 {notStarted ? "盤面クリックでスタート" : ""}
+      </>
+    ) : state.board.result === T.Piece.Draw ? (
+      "引き分けです。"
+    ) : (
+      <>
+        <Cell piece={state.board.result}></Cell> の勝利。
+      </>
+    );
   const otherMode = notStarted ? (
     <p>
       <Btn
