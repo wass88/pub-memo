@@ -102,6 +102,9 @@ export function Btn(props) {
       onTouchStart={(e) => {
         setPushed(true);
       }}
+      onTouchCancel={(e) => {
+        setPushed(false);
+      }}
       onTouchEnd={(e) => {
         if (pushed && touch()) {
           props.onClick(e);

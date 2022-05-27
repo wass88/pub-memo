@@ -34,7 +34,7 @@ function MemoPage({ id }) {
         </p>
         <Link href="/" passHref>
           <a>
-            <h1>他の記事</h1>
+            <h1>最新の記事</h1>
           </a>
         </Link>
         <MemoList memos={memos.getAll()}></MemoList>
