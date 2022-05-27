@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import Image from "next/image";
 
 export function Tips(props) {
@@ -7,4 +7,63 @@ export function Tips(props) {
 
 export function Img(props: { src: any; alt: string }) {
   return <Image src={props.src} alt={props.alt} className="blog-image"></Image>;
+}
+
+export function Btn(props) {
+  const touch = () =>
+    window.ontouchstart !== null && navigator.maxTouchPoints > 0;
+  const [pushed, setPushed] = useState(() => false);
+  return (
+    <button
+      disabled={props.disabled}
+      onClick={(e) => {
+        if (!touch()) props.onClick(e);
+      }}
+      onMouseDown={(e) => {
+        setPushed(true);
+      }}
+      onMouseLeave={(e) => {
+        setPushed(false);
+      }}
+      onMouseUp={(e) => {
+        setPushed(false);
+      }}
+      onTouchStart={(e) => {
+        setPushed(true);
+      }}
+      onTouchEnd={(e) => {
+        if (pushed) {
+          props.onClick(e);
+        }
+        setPushed(false);
+      }}
+      className={`${pushed ? "pushed" : ""}`}
+    >
+      {props.children}
+      <style jsx>{`
+        button {
+          background: var(--main-color);
+          color: var(--fg-color);
+          font-weight: bold;
+          text-shadow: 1px 1px var(--sub-dark-color);
+          font-size: 16px;
+          padding: 4px 8px;
+          border-radius: 20px;
+          border: 1px solid var(--sub-dark-color);
+          box-shadow: 1px 1px var(--sub-dark-color),
+            2px 2px var(--sub-dark-color), 3px 3px var(--sub-dark-color);
+          cursor: pointer;
+        }
+        button:hover {
+          box-shadow: 1px 1px var(--sub-dark-color),
+            2px 2px var(--sub-dark-color);
+          transform: translate(1px, 1px);
+        }
+        button.pushed {
+          box-shadow: none;
+          transform: translate(3px, 3px);
+        }
+      `}</style>
+    </button>
+  );
 }

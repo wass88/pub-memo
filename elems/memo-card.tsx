@@ -54,11 +54,13 @@ export function Tags({ tags }) {
   return (
     <div className="tags">
       {tags.map((tag) => (
-        <Link key={tag} href={`/tags/${tag}`} passHref>
-          <a>
-            <div className="chip">{tag}</div>
-          </a>
-        </Link>
+        <object key={tag}>
+          <Link href={`/tags/${tag}`} passHref>
+            <a>
+              <div className="chip">{tag}</div>
+            </a>
+          </Link>
+        </object>
       ))}
       <style jsx>{`
         .tags {

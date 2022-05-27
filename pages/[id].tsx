@@ -13,13 +13,13 @@ function MemoPage({ id }) {
         <meta name="date" content={getDate(memo)} />
         <title>{memo.title} - wassのメモ書き</title>
       </Head>
-      <Link href={`.`} passHref>
+      <Link href={`/${id}`} passHref>
         <a>
           <h1>{memo.title}</h1>
         </a>
       </Link>
       <div className="sub-info">
-        <span>公開日: {getDate(memo)}</span>
+        <span>作成日: {getDate(memo)}</span>
       </div>
       <memo.body></memo.body>
       <aside>

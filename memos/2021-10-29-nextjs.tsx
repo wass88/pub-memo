@@ -3,6 +3,7 @@ import memos from "../lib/memo-data";
 import React, { useReducer } from "react";
 import Code from "../elems/code";
 import Math from "../elems/math";
+import { Btn } from "../elems/base";
 
 const Body = () => {
   const [count, increment] = useReducer((x) => x + 1, 0);
@@ -18,7 +19,7 @@ x.map(a =>  a * a);
       `}</Code>
       <p>
         インタラクティブなものをかけるし、x = {count}。
-        <button onClick={increment}>x++</button>
+        <Btn onClick={increment}>x++</Btn>
       </p>
       <p>
         KaTeXの数式もかける。<Math>{`x ^ 2 + y ^ 2 = z ^ 2`}</Math>
