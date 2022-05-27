@@ -45,9 +45,12 @@ function Cell({
         }
         .first {
           color: red;
+          text-shadow: 1px 1px red, -1px -1px red, 1px -1px red, -1px 1px red;
         }
         .second {
           color: cyan;
+          text-shadow: 1px 1px cyan, -1px -1px cyan, 1px -1px cyan,
+            -1px 1px cyan;
         }
       `}</style>
     </span>
@@ -107,17 +110,21 @@ function View({
           .sub,
           .top {
             padding: 4px;
+            margin: 4px;
             border-radius: 4px;
             width: fit-content;
           }
+          .blank {
+            border: 2px solid transparent;
+          }
           .first {
-            border: 1px solid red;
+            border: 2px solid red;
           }
           .second {
-            border: 1px solid cyan;
+            border: 2px solid cyan;
           }
           .draw {
-            border: 1px solid gray;
+            border: 2px solid gray;
           }
         `}
       </style>
@@ -134,33 +141,40 @@ type Action =
   | {
       type: "init";
       config: T.Config;
+      bots: [T.Agent, T.Agent];
     };
-function useTicTacToeReducer(): [
-  { board: T.View; first: boolean; record: T.Action[]; config: T.Config },
-  (a: Action) => void
-] {
+type GameState = {
+  board: T.View;
+  first: boolean;
+  record: T.Action[];
+  config: T.Config;
+  bots: [T.Agent, T.Agent];
+};
+function useTicTacToeReducer(): [GameState, (a: Action) => void] {
   const initConfig = { rank: 2 };
-  const state = useRef(new T.State(initConfig));
-  const [view, setView] = useState({
-    board: state.current.view(),
-    first: state.current.first,
-    record: state.current.record,
+  const game = useRef(new T.Game(new T.State(initConfig)));
+  const [view, setView] = useState<GameState>({
+    board: game.current.state.view(),
+    first: game.current.state.first,
+    record: game.current.state.record,
     config: initConfig,
+    bots: [null, null],
   });
   const action = (action: Action) => {
     const update = () => {
       setView({
-        board: state.current.view(),
-        first: state.current.first,
-        record: state.current.record,
-        config: state.current.config,
+        board: game.current.state.view(),
+        first: game.current.state.first,
+        record: game.current.state.record,
+        config: game.current.state.config,
+        bots: game.current.bots,
       });
     };
     if (action.type === "play") {
-      state.current.play({ pos: action.pos, first: action.first });
+      game.current.play({ pos: action.pos, first: action.first });
       update();
     } else if (action.type === "init") {
-      state.current = new T.State(action.config);
+      game.current = new T.Game(new T.State(action.config), action.bots);
       update();
     }
   };
@@ -200,6 +214,7 @@ export function TicTacToe({}) {
           action({
             type: "init",
             config: { ...state.config, rank: state.config.rank - 1 },
+            bots: state.bots,
           })
         }
         disabled={state.config.rank <= 1}
@@ -211,11 +226,48 @@ export function TicTacToe({}) {
           action({
             type: "init",
             config: { ...state.config, rank: state.config.rank + 1 },
+            bots: state.bots,
           })
         }
         disabled={state.config.rank >= 5}
       >
         次元を増やす {state.config.rank === 4 ? "（非推奨）" : ""}
+      </Btn>{" "}
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: state.config,
+            bots: [null, T.RandomAgent],
+          })
+        }
+        disabled={state.bots[1] != null}
+      >
+        先手 vs Bot
+      </Btn>{" "}
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: state.config,
+            bots: [T.RandomAgent, null],
+          })
+        }
+        disabled={state.bots[0] != null}
+      >
+        Bot vs 後手
+      </Btn>{" "}
+      <Btn
+        onClick={() =>
+          action({
+            type: "init",
+            config: state.config,
+            bots: [null, null],
+          })
+        }
+        disabled={state.bots[0] == null && state.bots[1] == null}
+      >
+        先手 vs 後手
       </Btn>
     </p>
   ) : gameEnd ? (
@@ -225,6 +277,7 @@ export function TicTacToe({}) {
           action({
             type: "init",
             config: state.config,
+            bots: [null, null],
           })
         }
       >

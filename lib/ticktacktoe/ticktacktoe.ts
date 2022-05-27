@@ -192,6 +192,16 @@ export class State {
     }
     return limited;
   }
+  playable(): Action[] {
+    const collect = (v: View) => {
+      if (v.type === "leaf") {
+        if (v.playable) return [{ pos: v.pos, first: this.first }];
+        return [];
+      }
+      return v.board.flatMap(collect);
+    };
+    return collect(this.view());
+  }
   play(act: Action): Event {
     const { pos, first } = act;
     if (this.first !== first) {
@@ -227,5 +237,47 @@ export class State {
       diff: diff,
       winner: view.result,
     };
+  }
+  end(): boolean {
+    return this.bfs().result !== Piece.Blank;
+  }
+}
+
+export type Agent = {
+  name: string;
+  action: (state: State) => Action;
+} | null;
+
+export const RandomAgent = {
+  name: "random",
+  action(state: State): Action {
+    const playable = state.playable();
+    if (playable.length === 0) return null;
+    const i = 0 | (Math.random() * playable.length);
+    return playable[i];
+  },
+};
+
+export class Game {
+  state: State;
+  bots: [Agent, Agent];
+  constructor(state: State, bots: [Agent, Agent] = [null, null]) {
+    this.state = state;
+    this.bots = bots;
+    if (bots[0] != null) {
+      let action = this.bots[0].action(this.state);
+      this.state.play(action);
+    }
+  }
+  play(action: Action) {
+    this.state.play(action);
+    if (this.state.end()) return;
+    if (this.state.first && this.bots[0] != null) {
+      let action = this.bots[0].action(this.state);
+      this.state.play(action);
+    } else if (!this.state.first && this.bots[1] != null) {
+      let action = this.bots[1].action(this.state);
+      this.state.play(action);
+    }
   }
 }
