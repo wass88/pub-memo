@@ -7,11 +7,12 @@ import { MemoList } from "../elems/memo-card";
 
 export async function getStaticProps() {
   return {
-    props: {},
+    props: { notion: await memos.fetchNotion() },
   };
 }
 
-export default function Home({}) {
+export default function Home({ notion }) {
+  memos.addNotion(notion);
   return (
     <FullPage>
       <Head>

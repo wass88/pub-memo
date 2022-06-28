@@ -5,7 +5,8 @@ import memos, { getDate } from "../lib/memos";
 import { MemoList } from "../elems/memo-card";
 import { A } from "../elems/base";
 
-function MemoPage({ id }) {
+function MemoPage({ id, notion }) {
+  memos.addNotion(notion);
   const memo = memos.get(id);
   return (
     <FullPage>
@@ -54,6 +55,7 @@ function MemoPage({ id }) {
 export default MemoPage;
 
 export async function getStaticPaths() {
+  memos.addNotion(await memos.fetchNotion());
   return {
     paths: memos.getAll().map((b) => {
       return {
@@ -70,6 +72,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       id: params.id,
+      notion: await memos.fetchNotion(),
     },
   };
 }
