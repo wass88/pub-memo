@@ -10,6 +10,7 @@
     "test": "jest --watch --silent=false --verbose false"
   },
   "dependencies": {
+    "@notionhq/client": "^1.0.4",
     "image-trace-loader": "^1.0.2",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-optipng": "^8.0.0",
@@ -17,8 +18,10 @@
     "katex": "^0.15.1",
     "next": "^12.0.0",
     "next-optimized-images": "^2.6.2",
+    "notion-client": "^6.12.9",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-notion-x": "^6.12.10",
     "react-syntax-highlighter": "^15.4.5"
   },
   "devDependencies": {
