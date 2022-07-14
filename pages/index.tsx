@@ -7,7 +7,9 @@ import { MemoList } from "../elems/memo-card";
 
 export async function getStaticProps() {
   return {
-    props: { notion: await memos.fetchNotion() },
+    props: {
+      notion: await memos.fetchNotion(),
+    },
   };
 }
 

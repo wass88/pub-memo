@@ -1,66 +1,77 @@
 import { BlogPage, IDString } from "../memo-types";
-import { NotionAPI } from "notion-client";
+import { ExtendedRecordMap, SearchParams, SearchResults } from "notion-types";
 import { Client } from "@notionhq/client";
-import { errorMonitor } from "events";
-import { Recoverable } from "repl";
+import { NotionCompatAPI } from "notion-compat";
+import { NotionPage, blogFromNotion as blogFromNotion_ } from "./notion-page";
 
-export type NotionBody = {
-  body: NotionBlock[];
-};
-export type NotionData = {
-  id: IDString;
-  title: string;
-  summary: string;
-  body: NotionBody;
-  tags: string[];
-};
-
-export function notion2Blog(data): BlogPage {}
-
-const notion = new NotionAPI({ auth: process.env.NOTION_KEY });
+export const notion = new Client({ auth: process.env.NOTION_KEY });
+export const notionCompat = new NotionCompatAPI(notion);
 
 const BlogID = process.env.NOTION_BLOG_ID;
 
-export async function fetchNotion(): NotionData[] {
-  let pageCursor = "";
-  const pages = [];
-  while (true) {
+async function respToPage(result): Promise<NotionPage> {
+  function notionPageID(date: string, id: string): IDString {
+    return `${date.substring(0, 10)}-${id}` as IDString;
+  }
+  function plainText(o): string {
+    return o.map((p) => p.plain_text).join("");
+  }
+  return {
+    notionID: result.id,
+    id: notionPageID(
+      result.properties.PublishedAt.date.start,
+      plainText(result.properties.ID.rich_text)
+    ),
+    icon: result.icon.emoji,
+    tags: result.properties.Tags.multi_select.map((t) => t.name),
+    title: plainText(result.properties.Name.title),
+    summary: plainText(result.properties.Summary.rich_text),
+    recordMap: await notionCompat.getPage(result.id),
+  };
+}
+
+async function getDatabase(id: string): Promise<NotionPage[]> {
+  const results = [];
+  let i = 10;
+  let cursor = undefined;
+  while (i-- > 0) {
     const resp = await notion.databases.query({
-      database_id: BlogID,
+      database_id: id,
       filter: {
-        property: "Public",
-        checkbox: {
-          equals: true,
+        property: "PublishedAt",
+        date: {
+          is_not_empty: true,
         },
       },
+      start_cursor: cursor,
     });
-
-    resp.results.forEach(async (page) => {
-      pages.push({
-        pageID: page.id,
-        emoji: page.icon?.emoji,
-        describe: page.properties.Describe,
-        recordsMap: await fetchBlocks(page.id),
-      });
+    resp.results.forEach((result) => {
+      if (result.object !== "page") return;
+      results.push(respToPage(result));
     });
     if (!resp.has_more) {
       break;
     }
-    pageCursor = resp.next_cursor;
+    cursor = resp.next_cursor;
   }
-  return await Promise.all(pages);
+  console.log(`Got ${results.length} pages`);
+  return await Promise.all(results);
 }
 
-async function fetchBlocks(id: string) {
-  let blockCursor = "";
-  const blocks = [];
-  while (true) {
-    const resp = await notion.blocks.children.list({ block_id: id });
-    blocks.push(...resp.results);
-    if (!resp.has_more) {
-      break;
-    }
-    blockCursor = resp.next_cursor;
+const notionCache: { pages?: NotionPage[] } = {
+  pages: undefined,
+};
+
+export async function fetchNotion(): Promise<NotionPage[]> {
+  console.log(`Fetching Notion pages..? cache: ${notionCache.pages}`);
+  if (notionCache.pages) {
+    console.log("Using cached pages");
+    return notionCache.pages;
   }
-  return blocks;
+  console.warn("Fetching Notion pages");
+  notionCache.pages = await getDatabase(BlogID);
+  console.log(`Fetched ${notionCache.pages.length} pages`);
+  return notionCache.pages;
 }
+
+export const blogFromNotion = blogFromNotion_;
