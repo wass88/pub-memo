@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+  schedule:
+    - cron: '0 0/4 * * *'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -16,6 +18,9 @@ jobs:
         run: |
           yarn
           yarn build
+        env:
+          NOTION_KEY: ${{secrets.NOTION_KEY}}
+          NOTION_BLOG_ID: ${{secrets.NOTION_BLOG_ID}}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
