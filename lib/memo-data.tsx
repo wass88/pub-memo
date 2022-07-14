@@ -1,5 +1,5 @@
 import { BlogPage, IDString } from "./memo-types";
-import { fetchNotion } from "./notion/page";
+import { fetchNotion } from "./notion/fetch-page";
 import { NotionPage, blogFromNotion } from "./notion/notion-page";
 
 export class Memos {
@@ -24,9 +24,6 @@ export class Memos {
     return Array.from(this.memos.values())
       .concat(this.getAllNotionPage())
       .sort((a, b) => (a.id < b.id ? 1 : a.id > b.id ? -1 : 0));
-  }
-  async fetchNotion(): Promise<NotionPage[]> {
-    return fetchNotion();
   }
   addNotion(pages: NotionPage[]) {
     this.notions = new Map();

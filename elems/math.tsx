@@ -1,6 +1,5 @@
 import React from "react";
 import KaTeX from "katex";
-import "katex/dist/katex.min.css";
 
 type MathProp = {
   children: string;

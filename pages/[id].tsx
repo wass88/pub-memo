@@ -4,6 +4,7 @@ import FullPage, { Descriptions } from "../elems/full-page";
 import memos, { getDate } from "../lib/memos";
 import { MemoList } from "../elems/memo-card";
 import { A } from "../elems/base";
+import { fetchNotionInfo, fetchNotionPage } from "../lib/notion/fetch-page";
 
 function MemoPage({ id, notion }) {
   memos.addNotion(notion);
@@ -55,7 +56,7 @@ function MemoPage({ id, notion }) {
 export default MemoPage;
 
 export async function getStaticPaths() {
-  memos.addNotion(await memos.fetchNotion());
+  memos.addNotion(await fetchNotionInfo());
   return {
     paths: memos.getAll().map((b) => {
       return {
@@ -72,7 +73,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       id: params.id,
-      notion: await memos.fetchNotion(),
+      notion: await fetchNotionPage(params.id),
     },
   };
 }

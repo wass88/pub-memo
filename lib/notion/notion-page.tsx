@@ -12,8 +12,6 @@ import TweetEmbed from "react-tweet-embed";
 import Code_ from "../../elems/code";
 import { IconEmoji } from "../../elems/full-page";
 
-import "react-notion-x/src/styles.css";
-
 export type NotionPage = {
   id: IDString;
   notionID: string;
@@ -75,30 +73,9 @@ export const Equation: React.FC<{
 };
 
 export function blogFromNotion(page: NotionPage): BlogPage {
-  //TODO: ICON
   const body = (prop) => (
     <>
       {page.icon ? <IconEmoji emoji={page.icon}></IconEmoji> : <></>}
-      <style>{`
-        .notion-quote {
-          margin-left: 3px;
-          font-size: unset;
-        }
-        .notion-asset-wrapper iframe {
-          background: black;
-        }
-        .notion-equation-block {
-          text-align: center;
-          display: block;
-          cursor: unset;
-        }
-        .notion-equation-inline {
-          cursor: unset;
-        }
-        .notion-equation:hover {
-          background: unset;
-        }
-      `}</style>
       <NotionRenderer
         recordMap={page.recordMap}
         components={{ Code, Equation, nextLink: Link, Tweet, Collection }}

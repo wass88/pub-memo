@@ -4,6 +4,8 @@ import FullPage from "../../elems/full-page";
 import memos from "../../lib/memos";
 import { MemoList, Tags } from "../../elems/memo-card";
 
+import { fetchNotionInfo } from "../../lib/notion/fetch-page";
+
 function TagPage({ tag, notion }) {
   memos.addNotion(notion);
   const tagged = memos.getByTag(tag);
@@ -37,7 +39,7 @@ function TagPage({ tag, notion }) {
 export default TagPage;
 
 export async function getStaticPaths() {
-  memos.addNotion(await memos.fetchNotion());
+  memos.addNotion(await fetchNotionInfo());
   return {
     paths: memos.tags().map((t) => {
       return {
@@ -54,7 +56,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       tag: params.tag,
-      notion: await memos.fetchNotion(),
+      notion: await fetchNotionInfo(),
     },
   };
 }

@@ -4,11 +4,12 @@ import { useState } from "react";
 import memos from "../lib/memos";
 import FullPage from "../elems/full-page";
 import { MemoList } from "../elems/memo-card";
+import { fetchNotionInfo } from "../lib/notion/fetch-page";
 
 export async function getStaticProps() {
   return {
     props: {
-      notion: await memos.fetchNotion(),
+      notion: await fetchNotionInfo(),
     },
   };
 }

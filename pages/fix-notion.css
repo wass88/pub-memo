@@ -1,0 +1,18 @@
+.notion-quote {
+    margin-left: 3px;
+    font-size: unset;
+}
+.notion-asset-wrapper iframe {
+    background: black;
+}
+.notion-equation-block {
+    text-align: center;
+    display: block;
+    cursor: unset;
+}
+.notion-equation-inline {
+    cursor: unset;
+}
+.notion-equation:hover {
+    background: unset;
+}
