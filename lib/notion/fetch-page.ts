@@ -24,11 +24,12 @@ async function respToPage(result): Promise<NotionPage> {
       result.properties.PublishedAt.date.start,
       plainText(result.properties.ID.rich_text)
     ),
-    icon: result.icon.emoji,
+    icon: result.icon?.emoji ?? null,
     tags: result.properties.Tags.multi_select.map((t) => t.name),
     title: plainText(result.properties.Name.title),
     summary: plainText(result.properties.Summary.rich_text),
     recordMap: await notionCompat.getPage(result.id),
+    lastUpdated: result.last_edited_time,
   };
 }
 

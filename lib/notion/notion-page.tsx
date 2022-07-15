@@ -20,6 +20,7 @@ export type NotionPage = {
   recordMap: ExtendedRecordMap;
   tags: string[];
   icon: string;
+  lastUpdated: string;
 };
 
 function Code({ block, defaultLanguage = "javascript" }) {

@@ -38,6 +38,12 @@ export class Memos {
       blogFromNotion(data)
     );
   }
+  getLastUpdated(): string {
+    return Array.from(this.notions.values())
+      .map((p) => p.lastUpdated)
+      .sort()
+      .pop();
+  }
 }
 
 const memos = new Memos();
