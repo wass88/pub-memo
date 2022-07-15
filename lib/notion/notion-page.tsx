@@ -79,7 +79,13 @@ export function blogFromNotion(page: NotionPage): BlogPage {
       {page.icon ? <IconEmoji emoji={page.icon}></IconEmoji> : <></>}
       <NotionRenderer
         recordMap={page.recordMap}
-        components={{ Code, Equation, nextLink: Link, Tweet, Collection }}
+        components={{
+          Code,
+          Equation,
+          nextLink: Link,
+          Tweet,
+          Collection,
+        }}
         darkMode
       ></NotionRenderer>
     </>

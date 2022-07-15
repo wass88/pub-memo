@@ -4,6 +4,7 @@ import React, { useReducer } from "react";
 import Code from "../elems/code";
 import Math from "../elems/math";
 import { Btn, Img } from "../elems/base";
+import Image from "next/image";
 
 const Body = () => {
   const [count, increment] = useReducer((x) => x + 1, 0);

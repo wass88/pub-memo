@@ -6,6 +6,7 @@ module.exports = withOptimizedImages({
   handleImages: ["svg", "jpeg", "png"],
   images: {
     disableStaticImages: true,
+    domains: ["s3.us-west-2.amazonaws.com"],
   },
   imageTrace: {
     color: "rgba(1,1,1,0.8)",
