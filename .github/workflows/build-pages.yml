@@ -22,9 +22,15 @@ jobs:
           NOTION_KEY: ${{secrets.NOTION_KEY}}
           NOTION_BLOG_ID: ${{secrets.NOTION_BLOG_ID}}
 
-      - name: Deploy 🚀
+      - name: Check LastUpdated
+        run: |
+          cat out/.last-updated/index.html | sed -n 's/.*LastUpdate<!-- -->\([^<]*\).*/LOCAL_LAST=\1\n/p' | tee -a $GITHUB_ENV
+          curl http://memo.wass80.xyz/.last-updated/ | sed -n 's/.*LastUpdate<!-- -->\([^<]*\).*/REMOTE_LAST=\1\n/p' | tee -a $GITHUB_ENV
+
+      - name: Deploy 
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: out
+        if: env.LOCAL_LAST != env.REMOTE_LAST
