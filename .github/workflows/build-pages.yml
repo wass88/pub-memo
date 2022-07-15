@@ -33,4 +33,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: out
-        if: env.LOCAL_LAST != env.REMOTE_LAST
+        if: github.event_name == 'push' || env.LOCAL_LAST != env.REMOTE_LAST
