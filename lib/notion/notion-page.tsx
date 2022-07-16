@@ -2,7 +2,7 @@ import { BlogPage, IDString } from "../memo-types";
 import { ExtendedRecordMap } from "notion-types";
 
 import { NotionRenderer } from "react-notion-x";
-import { useNotionContext, cs } from "react-notion-x";
+import { useNotionContext, cs, defaultMapImageUrl } from "react-notion-x";
 import { getBlockTitle } from "notion-utils";
 import Link from "next/link";
 import { Collection } from "react-notion-x/build/third-party/collection";
@@ -50,7 +50,7 @@ const katexSettings = {
   strict: false,
 };
 
-export const Equation: React.FC<{
+const Equation: React.FC<{
   block: EquationBlock;
   math?: string;
   inline?: boolean;
@@ -73,16 +73,28 @@ export const Equation: React.FC<{
   );
 };
 
+function Image({ src, alt }) {
+  return <img src={src} alt={alt} />;
+}
+function mapImageUrl(url: string, block) {
+  if (url.startsWith("/notion-images")) {
+    return url;
+  }
+  return defaultMapImageUrl(url, block);
+}
+
 export function blogFromNotion(page: NotionPage): BlogPage {
   const body = (prop) => (
     <>
       {page.icon ? <IconEmoji emoji={page.icon}></IconEmoji> : <></>}
       <NotionRenderer
         recordMap={page.recordMap}
+        mapImageUrl={mapImageUrl}
         components={{
           Code,
           Equation,
           nextLink: Link,
+          Image: Image,
           Tweet,
           Collection,
         }}

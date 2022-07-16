@@ -58,41 +58,53 @@ async function getDatabase(id: string): Promise<NotionPage[]> {
     cursor = resp.next_cursor;
   }
   const pages = await Promise.all(results);
-  pages.forEach((page) => {
-    replaceImagesInPage(page);
-  });
+  await Promise.all(
+    pages.map(async (page) => {
+      await replaceImagesInPage(page);
+    })
+  );
   return pages;
 }
 
 async function replaceImagesInPage(page) {
-  await Object.values(page.recordMap.block).map(async (record: any) => {
-    if (record.type !== "reader") {
-      return;
-    }
-    const value = record.value;
-    if (value.type !== "image") {
-      return;
-    }
-    const src = value.properties.source[0][0];
-    const local = await downloadImage(src);
-    value.properties.source[0][0] = local;
-  });
+  return await Promise.all(
+    Object.values(page.recordMap.block).map(async (record: any) => {
+      if (record.type !== "reader") {
+        return;
+      }
+      const value = record.value;
+      if (value.type !== "image") {
+        return;
+      }
+      console.dir(value.properties);
+      const src = value.properties.source[0][0];
+      const local = await downloadImage(src);
+      value.properties.source[0][0] = local;
+      console.dir(value.properties);
+    })
+  );
 }
 
-const cacheImageDir = "./.next/cache/notion-images";
+const cacheImageDir = "/notion-images";
+const outDir = "./public";
 
 import crypto from "crypto";
 
 function downloadImage(src): Promise<string> {
-  if (!fs.existsSync(cacheImageDir)) {
-    fs.mkdirSync(cacheImageDir);
+  if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir);
+  }
+  const saveDir = `${outDir}/${cacheImageDir}`;
+  if (!fs.existsSync(saveDir)) {
+    fs.mkdirSync(saveDir);
   }
   function hash(url) {
     const m = src.match(/secure.notion-static.com\/([^\/]*)\//);
     if (m) return m[1];
     return crypto.createHash("md5").update(url).digest("hex");
   }
-  const file = `${cacheImageDir}/${hash(src)}`;
+  const file = `${saveDir}/${hash(src)}`;
+  const srcFile = `${cacheImageDir}/${hash(src)}`;
   return new Promise((ok, ng) => {
     https.get(src, (resp) => {
       if (resp.statusCode === 200) {
@@ -100,7 +112,7 @@ function downloadImage(src): Promise<string> {
           .pipe(fs.createWriteStream(file))
           .on("error", ng)
           .once("close", () => {
-            const filename = addExt(file);
+            const filename = addExt(file, srcFile);
             filename.then(
               (s) => ok(s),
               (r) => ng(r)
@@ -118,14 +130,14 @@ import { Transform } from "stream";
 import https from "https";
 import { fileTypeFromFile } from "file-type";
 
-async function addExt(file: string): Promise<string> {
+async function addExt(file: string, srcFile: string): Promise<string> {
   const type = await fileTypeFromFile(file);
   return new Promise((ok, ng) => {
     fs.rename(file, `${file}.${type.ext}`, (err) => {
       if (err) {
         ng(err);
       }
-      ok(`${file}.${type.ext}`);
+      ok(`${srcFile}.${type.ext}`);
     });
   });
 }
