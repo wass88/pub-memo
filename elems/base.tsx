@@ -54,20 +54,21 @@ export function Btn(props) {
 
   const styles = css`
     button {
-      background: var(--main-color);
+      background: var(--sub-dark-color);
       color: var(--fg-color);
       font-weight: bold;
       text-shadow: 1px 1px var(--sub-dark-color);
       font-size: 16px;
       padding: 4px 8px;
       border-radius: 20px;
-      border: 1px solid var(--sub-dark-color);
-      box-shadow: 1px 1px var(--sub-dark-color), 2px 2px var(--sub-dark-color),
-        3px 3px var(--sub-dark-color);
+      border: 1px solid var(--sub-darker-color);
+      box-shadow: 1px 1px var(--sub-darker-color),
+        2px 2px var(--sub-darker-color), 3px 3px var(--sub-darker-color);
       cursor: pointer;
     }
     button:hover:not(:disabled) {
-      box-shadow: 1px 1px var(--sub-dark-color), 2px 2px var(--sub-dark-color);
+      box-shadow: 1px 1px var(--sub-darker-color),
+        2px 2px var(--sub-darker-color);
       transform: translate(1px, 1px);
     }
     button.pushed:not(:disabled) {

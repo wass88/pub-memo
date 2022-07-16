@@ -60,9 +60,10 @@ export default function FullPage({ children }) {
           margin: 0;
         }
         :root {
-          --main-color: #369757;
-          --sub-light-color: #8abd43;
-          --sub-dark-color: #316d81;
+          --main-color: #78e2a0;
+          --sub-light-color: #7ff0aa;
+          --sub-darker-color: #3a6746;
+          --sub-dark-color: #6eb488;
           --sub-light-lightest: #e8f4d9;
 
           --fg-color: var(--sub-light-lightest);
@@ -86,7 +87,7 @@ export default function FullPage({ children }) {
           line-height: 1.25;
           font-weight: bold;
           padding: calc(3 * var(--jump)) 0;
-          --stripe-color: var(--sub-dark-color);
+          --stripe-color: var(--sub-light-color);
           background-color: var(--main-color);
           background-image: linear-gradient(
             90deg,
