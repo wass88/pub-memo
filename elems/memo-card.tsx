@@ -73,7 +73,7 @@ export function Tags({ tags }) {
           font-weight: bold;
           border-radius: 24px;
           color: var(--fg-color);
-          background: var(--sub-dark-color);
+          background: var(--sub-darker-color);
         }
         .chip:hover {
           transform: scale(1.1);
