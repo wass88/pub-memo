@@ -42,6 +42,9 @@ function MemoPage({ id, notion }) {
         <MemoList memos={memos.getAll()}></MemoList>
       </aside>
       <style jsx>{`
+        aside {
+          margin-top: 3rem;
+        }
         .sub-info {
           margin: -36px 0 16px 0;
           font-size: 75%;

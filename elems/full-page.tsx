@@ -105,7 +105,6 @@ export default function FullPage({ children }) {
         }
         h3 {
           font-size: 100;
-          text-shadow: 1px 1px var(--sub-dark-color);
         }
         .inner {
           max-width: 960px;
