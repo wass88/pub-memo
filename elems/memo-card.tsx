@@ -15,7 +15,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               background: var(--fg-color);
               width: calc((960px - 16px) / 2);
               border-radius: 12px;
-              color: var(--bg-color);
+              color: var(--sub-darker-color);
               cursor: pointer;
               padding: 0 12px 12px 12px;
               display: flex;
@@ -73,7 +73,7 @@ export function Tags({ tags }) {
           font-weight: bold;
           border-radius: 24px;
           color: var(--fg-color);
-          background: var(--sub-darker-color);
+          background: var(--sub-dark-color);
         }
         .chip:hover {
           transform: scale(1.1);

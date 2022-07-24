@@ -60,14 +60,13 @@ export default function FullPage({ children }) {
           margin: 0;
         }
         :root {
-          --main-color: #78e2a0;
+          --main-color: #6eb488;
           --sub-light-color: #7ff0aa;
           --sub-darker-color: #3a6746;
           --sub-dark-color: #6eb488;
-          --sub-light-lightest: #e8f4d9;
+          --sub-lighter-color: #e8f4d9;
 
-          --fg-color: var(--sub-light-lightest);
-          --bg-color: #202020;
+          --fg-color: var(--sub-lighter-color);
 
           --jump: 16px;
         }
@@ -102,6 +101,11 @@ export default function FullPage({ children }) {
         }
         h2 {
           font-size: 150;
+          text-shadow: 1px 1px var(--sub-dark-color);
+        }
+        h3 {
+          font-size: 100;
+          text-shadow: 1px 1px var(--sub-dark-color);
         }
         .inner {
           max-width: 960px;
