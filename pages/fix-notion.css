@@ -21,3 +21,6 @@
 .notion-equation:hover {
     background: unset;
 }
+.notion-link {
+    opacity: 0.9;
+}
