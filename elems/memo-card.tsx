@@ -14,12 +14,14 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
             .card {
               background: var(--fg-color);
               width: calc((960px - 16px) / 2);
+              height: 100%;
               border-radius: 12px;
               color: var(--sub-darker-color);
               cursor: pointer;
               padding: 0 12px 12px 12px;
               display: flex;
               flex-flow: column;
+              position: relative;
             }
             .card h2 {
               margin: 0 -12px 0 -12px;
@@ -37,6 +39,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
             p {
               margin: 12px 0 12px 0;
               opacity: 80%;
+              padding-bottom: 36px;
             }
             @media screen and (max-width: 960px) {
               .card {
@@ -67,6 +70,8 @@ export function Tags({ tags }) {
           display: flex;
           flex-flow: row wrap;
           gap: 8px;
+          position: absolute;
+          bottom: 16px;
         }
         .chip {
           padding: 2px 16px;
