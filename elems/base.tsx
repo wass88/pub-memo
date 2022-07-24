@@ -57,7 +57,7 @@ export function Btn(props) {
       background: var(--sub-dark-color);
       color: var(--fg-color);
       font-weight: bold;
-      text-shadow: 1px 1px var(--sub-dark-color);
+      text-shadow: 1px 1px var(--sub-darker-color);
       font-size: 16px;
       padding: 4px 8px;
       border-radius: 20px;
