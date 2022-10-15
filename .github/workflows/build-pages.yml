@@ -16,8 +16,8 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          yarn
-          yarn build
+          npm install
+          npm build
         env:
           NOTION_KEY: ${{secrets.NOTION_KEY}}
           NOTION_BLOG_ID: ${{secrets.NOTION_BLOG_ID}}
