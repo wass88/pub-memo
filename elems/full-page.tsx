@@ -81,6 +81,9 @@ export default function FullPage({ children }) {
         body {
           height: 100vh;
         }
+        .container {
+          padding-bottom: 16px;
+        }
         h1 {
           font-size: 400%;
           line-height: 1.25;
