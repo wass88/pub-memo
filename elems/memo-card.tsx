@@ -40,6 +40,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               margin: 12px 0 12px 0;
               opacity: 80%;
               padding-bottom: 36px;
+              font-weight: bold;
             }
             @media screen and (max-width: 960px) {
               .card {
