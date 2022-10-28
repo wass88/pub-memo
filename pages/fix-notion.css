@@ -1,3 +1,8 @@
+.notion * {
+    margin-block-start: unset;
+    margin-block-end: unset;
+    padding: unset;
+}
 .notion-page {
     width: unset;
     padding-left: unset;
@@ -23,4 +28,37 @@
 }
 .notion-link {
     opacity: 0.9;
+}
+.notion-text {
+    padding: 0;
+    margin: 0 0 16px 0;
+    line-height: 2;
+}
+.notion-h {
+    font-weight: bold;
+    line-height: 2;
+}
+.notion-h1 {
+    font-size: 200%;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+.notion-h2 {
+    font-size: 150%;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+.notion-list {
+    margin: 0 16px 16px;
+}
+.notion-list li {
+    padding: unset;
+    line-height: 2;
+}
+.notion pre {
+    width: 100%;
+}
+
+.notion-asset-wrapper img {
+    padding-bottom: 16px;
 }

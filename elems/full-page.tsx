@@ -103,11 +103,15 @@ export default function FullPage({ children }) {
           margin-bottom: -36px;
         }
         h2 {
-          font-size: 150;
+          font-size: 200%;
           text-shadow: 1px 1px var(--sub-dark-color);
+          margin-top: 10px;
+          margin-bottom: 6px;
         }
         h3 {
-          font-size: 100;
+          font-size: 150%;
+          margin-top: 12px;
+          margin-bottom: 4px;
         }
         .inner {
           max-width: 960px;
