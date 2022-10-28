@@ -25,8 +25,33 @@ function TagPage({ tag, notion }) {
           h2 {
             margin-top: 16px;
           }
+          .tags {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 8px;
+          }
+          .chip {
+            padding: 2px 16px;
+            font-weight: bold;
+            border-radius: 24px;
+            color: var(--fg-color);
+            background: var(--sub-dark-color);
+          }
+          .chip:hover {
+            transform: scale(1.1);
+          }
         `}</style>
-        <Tags tags={memos.tags()}></Tags>
+        <div className="tags">
+          {memos.tags().map((tag) => (
+            <object key={tag}>
+              <Link href={`/tags/${tag}`} passHref>
+                <a>
+                  <div className="chip">{tag}</div>
+                </a>
+              </Link>
+            </object>
+          ))}
+        </div>
         <Link href="/">
           <a>
             <h2>全記事を見る</h2>
