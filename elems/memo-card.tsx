@@ -37,7 +37,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               transform: translate(2px, 2px);
             }
             p {
-              margin: 12px 0 12px 0;
+              margin: 12px 5px;
               opacity: 80%;
               padding-bottom: 36px;
               font-weight: bold;
