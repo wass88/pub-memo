@@ -93,7 +93,7 @@ export default function FullPage({ children }) {
             transparent 50%,
             var(--stripe-color) 50%
           );
-          background-size: 5px 10px;
+          background-size: 3px 30px;
           background-clip: text;
           color: transparent;
           margin-top: -8px;
