@@ -31,7 +31,10 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               border-radius: 12px 12px 0 0;
               color: var(--fg-color);
               font-weight: bold;
-              text-shadow: 1px 1px var(--sub-dark-color);
+              text-shadow: 1px 1px var(--sub-darker-color),
+                -1px -1px var(--sub-darker-color),
+                1px -1px var(--sub-darker-color),
+                -1px 1px var(--sub-darker-color);
             }
             .card:hover {
               transform: translate(2px, 2px);
