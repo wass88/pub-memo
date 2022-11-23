@@ -76,7 +76,18 @@ export default function FullPage({ children }) {
           font-size: var(--jump);
           line-height: 2;
           color: var(--fg-color);
-          background: #151515;
+          background-color: #050505;
+          background-image: linear-gradient(
+              135deg,
+              #001006 25%,
+              transparent 25%
+            ),
+            linear-gradient(225deg, #001006 25%, transparent 25%),
+            linear-gradient(45deg, #001006 25%, transparent 25%),
+            linear-gradient(315deg, #001006 25%, #050505 25%);
+          background-position: 10px 0, 10px 0, 0 0, 0 0;
+          background-size: 20px 20px;
+          background-repeat: repeat;
         }
         body {
           height: 100vh;
