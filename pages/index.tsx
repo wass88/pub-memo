@@ -23,7 +23,9 @@ export default function Home({ notion }) {
         <title>wassのメモ書き</title>
       </Head>
 
-      <h1>メモ書き</h1>
+      <a href="https://wass80.xyz">
+        <h1>メモ書き</h1>
+      </a>
       <MemoList memos={memos.getAll()}></MemoList>
     </FullPage>
   );
