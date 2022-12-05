@@ -27,6 +27,11 @@ export function Descriptions({
       <Head>
         <title key="title">{title}</title>
         <meta key="description" name="description" content={description} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@wass80" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content="https://memo.wass80.xyz/icon.png" />
       </Head>
       <IconEmoji emoji={emoji}></IconEmoji>
     </>
