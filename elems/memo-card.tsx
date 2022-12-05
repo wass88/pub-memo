@@ -39,6 +39,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
                 -1px 0px var(--sub-darker-color),
                 0px -1px var(--sub-darker-color),
                 0px 1px var(--sub-darker-color);
+              box-shadow: 0px 1px 1px var(--sub-darker-color);
             }
             .card:hover {
               transform: translate(2px, 2px);
@@ -86,6 +87,11 @@ export function Tags({ tags }) {
           font-weight: bold;
           border-radius: 24px;
           color: var(--fg-color);
+          text-shadow: 1px 1px var(--sub-darker-color),
+            -1px -1px var(--sub-darker-color), 1px -1px var(--sub-darker-color),
+            -1px 1px var(--sub-darker-color), 1px 0px var(--sub-darker-color),
+            -1px 0px var(--sub-darker-color), 0px -1px var(--sub-darker-color),
+            0px 1px var(--sub-darker-color);
           background: var(--sub-dark-color);
         }
         .chip:hover {
