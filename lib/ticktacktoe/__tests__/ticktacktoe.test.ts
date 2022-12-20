@@ -1,5 +1,4 @@
-import exp from "constants";
-import { Config, State, Piece } from "../ticktacktoe";
+import { State, Piece } from "../ticktacktoe";
 
 test("init", () => {
   expect(new State({ rank: 2 }).config.rank).toBe(2);

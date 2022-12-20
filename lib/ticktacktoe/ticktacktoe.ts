@@ -1,6 +1,3 @@
-import { diffieHellman } from "crypto";
-import { BADFLAGS } from "dns";
-
 export type Config = {
   rank: number;
 };

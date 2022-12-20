@@ -144,7 +144,7 @@ async function addExt(file: string, srcFile: string): Promise<string> {
 
 const notionCacheFile = "./.next/cache/my-notion.json";
 const notionCacheFileLock = "./.next/cache/my-notion.json.lock";
-const cacheActiveTime = 1000 * 60;
+const cacheActiveTime = 1000 * 60 * 30; // 30min Cache
 
 function saveCache(pages: NotionPage[]): Promise<null> {
   const cache = JSON.stringify(pages);
