@@ -22,7 +22,6 @@ type Action =
   }
   | {
     type: "init";
-    config: O.Config;
     bots: [O.Agent, O.Agent];
   };
 type GameState = {
@@ -32,26 +31,37 @@ type GameState = {
   config: O.Config;
   bots: [O.Agent, O.Agent];
 };
-function useOroroReducer(): [GameState, (a: Action) => void] {
-  const initConfig = { ...O.Osero, boardSize: 4, initPiece: O.initPiece(true, 4) };
-  const game = useRef(new O.Game(new O.State(initConfig)));
+function useConfigReducer(): { config: O.Config, setRule: (string) => void, setSize: (number) => void } {
+  const [rule, setRule] = useState(() => "_OSERO")
+  const [boardSize, setSize] = useState(() => 4)
+
+  const checker = true; // TODO
+  const config = { rule: O.createRule(rule), boardSize, initPiece: O.initPiece(checker, boardSize) };
+  return { config, setRule, setSize }
+}
+function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
+  const game = useRef(new O.Game(new O.State(config)));
   const [view, setView] = useState<GameState>({
     view: game.current.state.view(),
     first: game.current.state.first,
     record: game.current.state.record,
-    config: initConfig,
+    config: config,
     bots: [null, null],
   });
+  const update = () => {
+    setView({
+      view: game.current.state.view(),
+      first: game.current.state.first,
+      record: game.current.state.record,
+      config: game.current.state.config,
+      bots: game.current.bots,
+    });
+  };
+  if (game.current.state.record.length === 0 && config.rule.ruleStr !== game.current.state.config.rule.ruleStr) {
+    game.current = new O.Game(new O.State(config), game.current.bots);
+    update();
+  }
   const action = (action: Action) => {
-    const update = () => {
-      setView({
-        view: game.current.state.view(),
-        first: game.current.state.first,
-        record: game.current.state.record,
-        config: game.current.state.config,
-        bots: game.current.bots,
-      });
-    };
     if (action.type === "play") {
       game.current.play({
         pos: action.pos,
@@ -61,7 +71,7 @@ function useOroroReducer(): [GameState, (a: Action) => void] {
       });
       update();
     } else if (action.type === "init") {
-      game.current = new O.Game(new O.State(action.config), action.bots);
+      game.current = new O.Game(new O.State(config), action.bots);
       update();
     }
   };
@@ -70,7 +80,8 @@ function useOroroReducer(): [GameState, (a: Action) => void] {
 }
 
 export function Ororo({ }) {
-  const [state, action] = useOroroReducer();
+  const { config, setRule, setSize } = useConfigReducer();
+  const [state, action] = useOroroReducer(config);
   const notStarted = state.record.length === 0;
   const gameEnd = state.view.result !== O.Piece.Blank;
 
@@ -116,7 +127,6 @@ export function Ororo({ }) {
         onClick={() =>
           action({
             type: "init",
-            config: state.config,
             bots: [null, O.RandomAgent],
           })
         }
@@ -128,7 +138,6 @@ export function Ororo({ }) {
         onClick={() =>
           action({
             type: "init",
-            config: state.config,
             bots: [O.RandomAgent, null],
           })
         }
@@ -140,7 +149,6 @@ export function Ororo({ }) {
         onClick={() =>
           action({
             type: "init",
-            config: state.config,
             bots: [null, null],
           })
         }
@@ -155,7 +163,6 @@ export function Ororo({ }) {
         onClick={() =>
           action({
             type: "init",
-            config: state.config,
             bots: [null, null],
           })
         }
@@ -167,6 +174,7 @@ export function Ororo({ }) {
   return (
     <div className="cont">
       {otherMode}
+      <RuleSelector rule={config.rule.ruleStr} setRule={setRule} disable={!notStarted}></RuleSelector>
       <p>{message}</p>
       <View view={state.view} action={action} first={state.first}></View>
       <style jsx>{`
@@ -257,4 +265,35 @@ function View({
       `}</style>
     </div>
   );
+}
+
+function RuleSelector({ rule, setRule, disable }: { rule: string, setRule: (string) => void, disable: boolean }) {
+  return <div className={`selector ${disable ? "disable" : "enable"}`}>
+    {rule.split("").map((c, i) => {
+      const rotOE = (c) => c === "O" ? "E" : "O";
+      const rot_SR = (c) => c === "_" ? "S" : c === "S" ? "R" : "_";
+      const changeRule = (c, i) => setRule(`${rule.substring(0, i)}${c}${rule.substring(i + 1)}`)
+      const change = () => {
+        if (disable) return;
+        if (i === 0) return;
+        if (i === 1) changeRule(rotOE(c), 1)
+        if (i === 2) changeRule(rot_SR(c), 2);
+        if (i === 3) changeRule(rotOE(c), 3)
+        if (i === 4) changeRule(rot_SR(c), 4);
+        if (i === 5) changeRule(rotOE(c), 5)
+      }
+      return <span key={i} className={`char char${i}`} onClick={change}>{c}</span>
+    })}
+    <style jsx>{`
+    .selector {
+      font-size: 200%;
+    }
+    .enable .char {
+      cursor: pointer;
+    }
+    .char2, .char4 {
+      margin-left: 1rem;
+    }
+    `}</style>
+  </div>
 }

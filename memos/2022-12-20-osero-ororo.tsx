@@ -19,7 +19,7 @@ const Body = () => {
 const page: BlogPage = {
   id: "2022-12-20-osero-ororo",
   title: "オセロ？オロロ？オセロの変種ルールたち",
-  summary: "小谷善行さん発案のOSEROバリアント,
+  summary: "小谷善行さん発案のOSEROバリアント",
   tags: ["game"],
   body: Body,
 };

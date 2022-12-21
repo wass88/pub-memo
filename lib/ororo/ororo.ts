@@ -61,7 +61,7 @@ export type Rule =
       putTo: boolean;
     };
 
-function createRule(ruleStr: string): Rule {
+export function createRule(ruleStr: string): Rule {
   const [l, ls, m, ms, r, rs] = ruleStr.split("");
   const pieceChar = (p: string) => {
     if (p === "O") {
@@ -219,11 +219,8 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
             swapIf(rule.reach, first),
             swapIf(rule.reachTo, first)
           ).flatMap((rev) => {
-            if (rule.reach === rule.reachTo) {
-              return rev;
-            } else {
-              return rev.slice(0, -1);
-            }
+            return [...(rule.set ? rev.slice(0, -1) : []),
+                    ...(rev.length > 0 && rule.setTo ? [rev[rev.length - 1]] : [])];
           });
           if (set.length === 0) {
             return { put: [], set: [] };
@@ -322,6 +319,7 @@ export class State {
       };
     }
     const { put, set } = this.checkReverse(act);
+    console.log({put, set, rule: this.config.rule})
     put.forEach(([y, x, p]) => {
       this.board[y][x] = p;
     });
