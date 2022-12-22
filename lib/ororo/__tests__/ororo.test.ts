@@ -1,4 +1,4 @@
-import { State, Piece, Osero } from "../ororo";
+import { State, Piece, Osero, initPiece, createRule } from "../ororo";
 
 test("init", () => {
   expect(new State(Osero).config.boardSize).toBe(6);
@@ -33,3 +33,14 @@ test("rand play", () => {
   }
   expect(state.end()).toBe(true);
 });
+
+
+test("orero", () => {
+  const state = new State({ boardSize: 4, rule: createRule("_ORORO"), initPiece: initPiece(true, 4) });
+  expect(state.playable().length).toBe(2);
+})
+test("oero", () => {
+  const state = new State({ boardSize: 6, rule: createRule("_O_ERO"), initPiece: initPiece(true, 6) });
+  expect(state.playable().length).toBe(10);
+  state.play(state.playable()[1]);
+})

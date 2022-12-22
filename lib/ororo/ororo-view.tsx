@@ -33,7 +33,7 @@ type GameState = {
 };
 function useConfigReducer(): { config: O.Config, setRule: (string) => void, setSize: (number) => void } {
   const [rule, setRule] = useState(() => "_OSERO")
-  const [boardSize, setSize] = useState(() => 4)
+  const [boardSize, setSize] = useState(() => 6)
 
   const checker = true; // TODO
   const config = { rule: O.createRule(rule), boardSize, initPiece: O.initPiece(checker, boardSize) };
