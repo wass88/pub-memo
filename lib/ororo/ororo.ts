@@ -353,7 +353,10 @@ export type View = {
   scores: [number, number];
   result: Piece;
   playable: Action[];
-};
+  playChange: {
+    put: [number, number, Piece][], set: [number, number][]
+  }[][];
+}
 
 export class State {
   config: Config;
@@ -426,6 +429,7 @@ export class State {
       scores: this.scores(),
       result: this.winner(),
       playable: this.playable(),
+      playChange: this.playChange(),
     };
   }
   scores(): [number, number] {
@@ -478,6 +482,16 @@ export class State {
       act.pos,
       act.first
     );
+  }
+  playChange(): {
+    put: [number, number, Piece][];
+    set: [number, number][];
+  }[][] {
+    return Array.from(Array(this.config.boardSize)).map((_, y) =>
+      Array.from(Array(this.config.boardSize)).map((_, x) =>
+        this.checkReverse({ pos: [y, x], first: this.first, pass: false })
+      )
+    )
   }
   boardStr(): string {
     return this.board

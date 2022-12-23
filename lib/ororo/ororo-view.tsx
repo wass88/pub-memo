@@ -1,29 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Btn } from "../../elems/base";
+import { View, Action } from "./ororo-player";
+import { RuleSelector, useConfigReducer } from "./ororo-rule-selector";
 import * as O from "./ororo";
 
-function resultStr(result: O.Piece): string {
-  return result === O.Piece.First
-    ? "first"
-    : result === O.Piece.Second
-      ? "second"
-      : result === O.Piece.Draw
-        ? "draw"
-        : "blank";
-}
-
-type Action =
-  | {
-    type: "play";
-    pos: [number, number];
-    posTo?: [number, number];
-    first: boolean;
-    pass: boolean;
-  }
-  | {
-    type: "init";
-    bots: [O.Agent, O.Agent];
-  };
 type GameState = {
   view: O.View;
   first: boolean;
@@ -31,14 +11,6 @@ type GameState = {
   config: O.Config;
   bots: [O.Agent, O.Agent];
 };
-function useConfigReducer(): { config: O.Config, setRule: (string) => void, setSize: (number) => void } {
-  const [rule, setRule] = useState(() => "_OSERO")
-  const [boardSize, setSize] = useState(() => 6)
-
-  const checker = true; // TODO
-  const config = { rule: O.createRule(rule), boardSize, initPiece: O.initPiece(checker, boardSize) };
-  return { config, setRule, setSize }
-}
 function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
   const game = useRef(new O.Game(new O.State(config)));
   const [view, setView] = useState<GameState>({
@@ -184,116 +156,4 @@ export function Ororo({ }) {
       `}</style>
     </div>
   );
-}
-function playableIn(acts: O.Action[], y: number, x: number) {
-  return acts.some((act) => !act.pass && act.pos[0] === y && act.pos[1] === x);
-}
-function View({
-  view,
-  action,
-  first,
-}: {
-  view: O.View;
-  action: (action: Action) => void;
-  first: boolean;
-}) {
-  return (
-    <div className="view">
-      {view.board.map((row, y) => {
-        return <div className="row" key={y}>{row.map((piece, x) => {
-          const playable = playableIn(view.playable, y, x);
-          const onClick = () => {
-            if (playable) {
-              action({ type: "play", pos: [y, x], first, pass: false });
-            }
-          };
-          return (
-            <div className={`cell ${playable ? "playable" : ""}`} key={`${y}-${x}`} onClick={onClick}
-            >
-              {piece !== O.Piece.Blank ? (
-                <div className={`piece ${resultStr(piece)}`} ></div>
-              ) : (
-                <></>
-              )}
-            </div>
-          );
-        })}</div>;
-      })}
-      {
-        (view.playable.length > 0 && view.playable[0].pass) ?
-          <div className="pass" onClick={() => {
-            action({ type: "play", pos: null, first, pass: true });
-          }}>パス</div>
-          : <></>
-      }
-      <style jsx>{`
-        .row {
-          display: flex;
-          gap: 2px;
-          margin-bottom: 2px;
-        }
-        .cell {
-          width: 64px;
-          height: 64px;
-          background: #3c7400;
-        }
-        .playable {
-          cursor: pointer;
-          box-shadow: inset 1px 1px white, inset -1px -1px white;
-        }
-        .piece {
-          width: 64px;
-          height: 64px;
-          border-radius: 50%;
-        }
-        .first {
-          background: #fff;
-        }
-        .second {
-          background: #000;
-        }
-        .pass {
-          width: 160px;
-          height: 80px;
-          line-height: 80px;
-          text-align: center;
-          font-size: 64px;
-          background: #3c7400;
-          color: white;
-          cursor: pointer;
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function RuleSelector({ rule, setRule, disable }: { rule: string, setRule: (string) => void, disable: boolean }) {
-  return <div className={`selector ${disable ? "disable" : "enable"}`}>
-    {rule.split("").map((c, i) => {
-      const rotOE = (c) => c === "O" ? "E" : "O";
-      const rot_SR = (c) => c === "_" ? "S" : c === "S" ? "R" : "_";
-      const changeRule = (c, i) => setRule(`${rule.substring(0, i)}${c}${rule.substring(i + 1)}`)
-      const change = () => {
-        if (disable) return;
-        if (i === 0) return;
-        if (i === 1) changeRule(rotOE(c), 1)
-        if (i === 2) changeRule(rot_SR(c), 2);
-        if (i === 3) changeRule(rotOE(c), 3)
-        if (i === 4) changeRule(rot_SR(c), 4);
-        if (i === 5) changeRule(rotOE(c), 5)
-      }
-      return <span key={i} className={`char char${i}`} onClick={change}>{c}</span>
-    })}
-    <style jsx>{`
-    .selector {
-      font-size: 200%;
-    }
-    .enable .char {
-      cursor: pointer;
-    }
-    .char2, .char4 {
-      margin-left: 1rem;
-    }
-    `}</style>
-  </div>
 }
