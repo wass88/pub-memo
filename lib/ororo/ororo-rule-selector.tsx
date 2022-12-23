@@ -6,7 +6,7 @@ export function useConfigReducer(): {
   setRule: (string) => void;
   setSize: (number) => void;
 } {
-  const [rule, setRule] = useState(() => "_ESOSO");
+  const [rule, setRule] = useState(() => "_OSESO");
   const [boardSize, setSize] = useState(() => 6);
 
   const checker = true; // TODO

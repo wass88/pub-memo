@@ -227,13 +227,33 @@ function RuleText({ rule }: { rule: string }) {
           並びの先に <em>{setYouMe(rule[4], rule[5])}</em> があれば、
           <em>{turn(rule[4], rule[5])}</em>。これらを実行できる。
         </li>
-        <li>注: ゲーム性は保証しません。</li>
+        <li>何も実行できなければ、相手の番になる。</li>
+        {(() => {
+          let special = {
+            _OSERO: "要するにオセロです。",
+            _ESORE: "つまり、負けることを目指すオセロ。",
+            _O_O_O: "スプラトゥーン？",
+            _ORORO: "注: ゲーム性は保証しません。ほらね。",
+            _ORERO: "チョコクッキー！",
+            _OSESO: "つまり、オセロっぽいけど、挟む自分の石もひっくり返す。",
+          }[rule];
+          if (special) return <li>{special}</li>;
+          else <li>注: ゲーム性は保証しません。</li>;
+        })()}
 
         <li>
           <A href="http://kusabazyun.banjoyugi.net/Home/reproductioned/fairy/oserobarieshon">
             参考: オセロバリエーション紹介 -
             ゲーム研究家・草場純さんの研究を収集するサイト
           </A>
+        </li>
+        <li>
+          <A href="https://adventar.org/calendars/7522">
+            ボードゲーム・パズルプログラミング Advent Calendar 2022の20日目。
+          </A>
+          <ul>
+            <li>ボードゲームのメタ実装として、プログラミングに関係する。</li>
+          </ul>
         </li>
       </ul>
     </>

@@ -92,20 +92,13 @@ export function Player({
                           )} ${lastSet ? "flip" : ""} ${
                             readyPut ? "ready-put" : ""
                           } ${readySet ? "ready-set" : ""}`}
-                        >
-                          {resultStr(readyPutPiece)[0]}
-                          {lastSet ? "!" : ""}
-                          {readyPut ? "P" : ""}
-                        </div>
+                        ></div>
                         {/* WORKAROUND ひっくり返す例示のときに別要素で */}
                         <div
                           className={`piece set ${resultStr(readyPutPiece)} ${
                             readySet ? "ready-set" : ""
                           }`}
-                        >
-                          {resultStr(readyPutPiece)[0]}
-                          {readySet ? "S" : ""}
-                        </div>
+                        ></div>
                       </>
                     ) : (
                       <></>
