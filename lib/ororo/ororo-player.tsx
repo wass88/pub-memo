@@ -130,11 +130,15 @@ export function Player({
             gap: 2px;
             margin-bottom: 2px;
           }
+          .row:last-child {
+            margin-bottom: 0;
+          }
+
           .cell {
             --size: 64px;
             width: var(--size);
             height: var(--size);
-            background: var(--cell-colorr);
+            background: var(--cell-color);
             position: relative;
           }
           .playable {
@@ -151,11 +155,11 @@ export function Player({
             width: var(--size);
             height: var(--size);
             border-radius: 50%;
-            background: white;
+            background: black;
             color: red;
           }
           .second {
-            background: black;
+            background: white;
           }
           .flip.first {
             animation: 1s ease forwards flip-rev;
@@ -184,7 +188,7 @@ export function Player({
           }
 
           .pass {
-            width: 160px;
+            width: 100%;
             height: 80px;
             line-height: 80px;
             text-align: center;
@@ -198,41 +202,46 @@ export function Player({
           }
           @keyframes flip {
             from {
-              background: white;
+              background: black;
               transform: rotate3d(1, -1, 0, 0turn);
             }
             25% {
-              background: white;
+              background: black;
             }
             45% {
-              background: black;
+              background: white;
             }
             to {
-              background: black;
+              background: white;
               transform: rotate3d(1, -1, 0, 0.5turn);
             }
           }
           @keyframes flip-rev {
             from {
-              background: black;
+              background: white;
               transform: rotate3d(1, -1, 0, 0.5turn);
             }
             40% {
-              background: black;
+              background: white;
             }
             60% {
-              background: white;
+              background: black;
             }
             to {
-              background: white;
+              background: black;
               transform: rotate3d(1, -1, 0, 0turn);
             }
           }
           .view {
-            box-shadow: 3px 3px var(--cell-color)), 
-            -3px 3px var(--cell-color)), 
-            3px -3px var(--cell-color)), 
-            -3px -3px var(--cell-color));
+            box-shadow: 0 0 0 3px var(--cell-color);
+          }
+          .view.view-first {
+            box-shadow: 0 0 0 3px var(--cell-color), 0 0 0 5px black,
+              0 0 0 7px var(--cell-color);
+          }
+          .view.view-second {
+            box-shadow: 0 0 0 3px var(--cell-color), 0 0 0 5px white,
+              0 0 0 7px var(--cell-color);
           }
         `}</style>
       </div>

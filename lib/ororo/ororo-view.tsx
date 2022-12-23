@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Btn } from "../../elems/base";
+import { A, Btn } from "../../elems/base";
 import { Player, Action } from "./ororo-player";
-import { RuleSelector, useConfigReducer } from "./ororo-rule-selector";
+import {
+  ruleKana,
+  RuleSelector,
+  useConfigReducer,
+} from "./ororo-rule-selector";
 import * as O from "./ororo";
 
 type GameState = {
@@ -29,7 +33,10 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
       bots: game.current.bots,
     });
   };
-  if (game.current.state.record.length === 0 && config.rule.ruleStr !== game.current.state.config.rule.ruleStr) {
+  if (
+    game.current.state.record.length === 0 &&
+    config.rule.ruleStr !== game.current.state.config.rule.ruleStr
+  ) {
     game.current = new O.Game(new O.State(config), game.current.bots);
     update();
   }
@@ -51,7 +58,7 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
   return [view, action];
 }
 
-export function Ororo({ }) {
+export function Ororo({}) {
   const { config, setRule, setSize } = useConfigReducer();
   const [state, action] = useOroroReducer(config);
   const notStarted = state.record.length === 0;
@@ -75,25 +82,27 @@ export function Ororo({ }) {
     state.view.result === O.Piece.First
       ? msgBot(loseMsg, winMsg)
       : state.view.result === O.Piece.Second
-        ? msgBot(winMsg, loseMsg)
-        : "";
+      ? msgBot(winMsg, loseMsg)
+      : "";
+  const pointMsg = `黒 ${state.view.scores[0]} - ${state.view.scores[1]} 白`;
 
   const message =
     state.view.result === O.Piece.Blank ? (
       <>
-        {state.first ? "白" : "黒"}の手番{" "}
-        {notStarted ? "盤面クリックでスタート" : ""}
+        {state.first ? "先手黒" : "後手白"}陣営の手番。{" "}
+        {notStarted ? "盤面クリックでスタート" : pointMsg}
       </>
     ) : state.view.result === O.Piece.Draw ? (
-      "引き分けです。"
+      <>引き分けです。{pointMsg}</>
     ) : (
       <>
-        {state.view.result} の勝利。
+        {state.view.result === O.Piece.First ? "先手黒陣営" : "後手白陣営"}
+        の勝利。{pointMsg}
         {winnerMsg}
       </>
     );
 
-  const otherMode = (notStarted) ? (
+  const otherMode = notStarted ? (
     <p>
       <Btn
         onClick={() =>
@@ -146,7 +155,11 @@ export function Ororo({ }) {
   return (
     <div className="cont">
       {otherMode}
-      <RuleSelector rule={config.rule.ruleStr} setRule={setRule} disable={!notStarted}></RuleSelector>
+      <RuleSelector
+        rule={config.rule.ruleStr}
+        setRule={setRule}
+        disable={!notStarted}
+      ></RuleSelector>
       <p>{message}</p>
       <Player view={state.view} action={action} first={state.first}></Player>
       <style jsx>{`
@@ -154,6 +167,47 @@ export function Ororo({ }) {
           margin-block-end: 1rem;
         }
       `}</style>
+      <RuleText rule={config.rule.ruleStr}></RuleText>
     </div>
+  );
+}
+
+function RuleText({ rule }: { rule: string }) {
+  const youMe = (me) => (me == "O" ? "自分(Own)の石" : "相手(Enemy)の石");
+  const setYouMe = (set, me) => (set == "_" ? "空きマス" : youMe(me));
+  const turn = (set, me) =>
+    set == "_" ? (
+      <>
+        そこにも<em>{youMe(me)}</em>を置く
+      </>
+    ) : set == "S" ? (
+      "ひっくり返す(Set)"
+    ) : (
+      "そのままにする(Reset)"
+    );
+  return (
+    <>
+      <h2>『{ruleKana(rule)}』のルール</h2>
+      <ul>
+        <li>
+          交互に <em>{youMe(rule[1])}</em> を置く場所を選ぶ。
+        </li>
+        <li>
+          置く場所から8方向に <em>{setYouMe(rule[2], rule[3])}</em>{" "}
+          の並びを確認する。
+          <em>{turn(rule[2], rule[3])}</em>。
+        </li>
+        <li>
+          並びの先に <em>{setYouMe(rule[4], rule[5])}</em> があれば、
+          <em>{turn(rule[4], rule[5])}</em>。これらを実行できる。
+        </li>
+        <li>
+          <A href="http://kusabazyun.banjoyugi.net/Home/reproductioned/fairy/oserobarieshon">
+            参考: オセロバリエーション紹介 -
+            ゲーム研究家・草場純さんの研究を収集するサイト
+          </A>
+        </li>
+      </ul>
+    </>
   );
 }

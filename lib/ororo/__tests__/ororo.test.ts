@@ -4,7 +4,7 @@ test("init", () => {
   expect(new State(Osero).config.boardSize).toBe(6);
   expect(new State(Osero).board.length).toBe(6);
   expect(new State(Osero).board[0].length).toBe(6);
-  expect(new State(Osero).board[2][3]).toBe(Piece.Second);
+  expect(new State(Osero).board[2][3]).toBe(Piece.First);
 });
 
 test("playable", () => {
@@ -17,7 +17,7 @@ test("playable", () => {
   state.play(state.playable()[0]);
   expect(state.playable().length).toBe(3);
   state.play(state.playable()[0]);
-  expect(state.playable().length).toBe(5);
+  expect(state.playable().length).toBe(4);
 });
 
 test("rand play", () => {

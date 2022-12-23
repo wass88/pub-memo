@@ -313,10 +313,10 @@ export function initPiece(cross: boolean, size: number): [Piece, number, number]
   let center = Math.floor((size - 1) / 2);
   if (cross) {
     return [
-      [Piece.First, center, center],
-      [Piece.First, center + 1, center + 1],
-      [Piece.Second, center, center + 1],
-      [Piece.Second, center + 1, center],
+      [Piece.Second, center, center],
+      [Piece.Second, center + 1, center + 1],
+      [Piece.First, center, center + 1],
+      [Piece.First, center + 1, center],
     ];
   } else {
     return [
@@ -441,7 +441,7 @@ export class State {
       playable: this.playable(),
       playChange: this.playChange(),
       lastPut: this.lastPut,
-      lastSet: this.lastSet,
+      lastSet: this.lastSet
     };
   }
   scores(): [number, number] {
