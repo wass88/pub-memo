@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Btn } from "../../elems/base";
-import { View, Action } from "./ororo-player";
+import { Player, Action } from "./ororo-player";
 import { RuleSelector, useConfigReducer } from "./ororo-rule-selector";
 import * as O from "./ororo";
 
@@ -148,7 +148,7 @@ export function Ororo({ }) {
       {otherMode}
       <RuleSelector rule={config.rule.ruleStr} setRule={setRule} disable={!notStarted}></RuleSelector>
       <p>{message}</p>
-      <View view={state.view} action={action} first={state.first}></View>
+      <Player view={state.view} action={action} first={state.first}></Player>
       <style jsx>{`
         .cont {
           margin-block-end: 1rem;

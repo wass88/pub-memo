@@ -356,6 +356,8 @@ export type View = {
   playChange: {
     put: [number, number, Piece][], set: [number, number][]
   }[][];
+  lastPut: [number, number][];
+  lastSet: [number, number][];
 }
 
 export class State {
@@ -364,6 +366,8 @@ export class State {
   first: boolean;
   board: Piece[][];
   rule: ruleAgent;
+  lastPut: [number, number][];
+  lastSet: [number, number][];
 
   constructor(config: Config) {
     this.config = config;
@@ -376,6 +380,8 @@ export class State {
       this.board[y][x] = piece;
     });
     this.rule = ruleToAgent(config.rule);
+    this.lastPut = []
+    this.lastSet = []
   }
   playable(): Action[] {
     const actions = this.playableBy(this.first);
@@ -390,6 +396,8 @@ export class State {
   }
   play(act: Action): Event {
     this.record.push(act);
+    this.lastPut = [];
+    this.lastSet = [];
     if (act.pass) {
       this.first = !this.first;
       return {
@@ -402,10 +410,12 @@ export class State {
     const { put, set } = this.checkReverse(act);
     put.forEach(([y, x, p]) => {
       this.board[y][x] = p;
+      this.lastPut.push([y, x])
     });
     set.forEach(([y, x]) => {
       this.board[y][x] =
         this.board[y][x] === Piece.Second ? Piece.First : Piece.Second;
+      this.lastSet.push([y, x])
     });
     this.first = !this.first;
     return {
@@ -430,6 +440,8 @@ export class State {
       result: this.winner(),
       playable: this.playable(),
       playChange: this.playChange(),
+      lastPut: this.lastPut,
+      lastSet: this.lastSet,
     };
   }
   scores(): [number, number] {
