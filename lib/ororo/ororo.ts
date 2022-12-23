@@ -595,11 +595,19 @@ export class Game {
   constructor(state: State, bots: [Agent, Agent] = [null, null]) {
     this.state = state;
     this.bots = bots;
-    if (bots[0] != null) {
-      let action = this.bots[0].action(this.state);
-      action.then((action) => this.state.play(action));
-    }
     this.busy = false;
+  }
+  kickBotStart(update: () => void) {
+    if (this.bots[0] != null) {
+      this.busy = true;
+      update();
+      let action = this.bots[0].action(this.state);
+      action.then((action) => {
+        this.state.play(action);
+        this.busy = false;
+        update();
+      });
+    }
   }
   play(action: Action, update: (bot: boolean, back: () => void) => void) {
     this.state.play(action);

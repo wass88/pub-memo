@@ -72,6 +72,7 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
     } else if (action.type === "init") {
       game.current = new O.Game(new O.State(config), action.bots);
       update();
+      game.current.kickBotStart(update);
     }
   };
 
@@ -111,7 +112,7 @@ export function Ororo({}) {
     state.view.result === O.Piece.Blank ? (
       <>
         {state.first ? "先手黒" : "後手白"}陣営の手番。{botMsg}
-        {notStarted ? "盤面クリックでスタート" : pointMsg}
+        {notStarted && !state.busy ? "盤面クリックでスタート" : pointMsg}
       </>
     ) : state.view.result === O.Piece.Draw ? (
       <>引き分けです。{pointMsg}</>
@@ -255,7 +256,6 @@ function RuleText({ rule }: { rule: string }) {
             <li>ボードゲーム生成プログラミングということで登録。</li>
           </ul>
         </li>
-        <li>後手vsBotバグってる 2022/12/23</li>
       </ul>
     </>
   );
