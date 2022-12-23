@@ -255,6 +255,7 @@ function RuleText({ rule }: { rule: string }) {
             <li>ボードゲーム生成プログラミングということで登録。</li>
           </ul>
         </li>
+        <li>後手vsBotバグってる 2022/12/23</li>
       </ul>
     </>
   );
