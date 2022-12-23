@@ -14,6 +14,7 @@ type GameState = {
   record: O.Action[];
   config: O.Config;
   bots: [O.Agent, O.Agent];
+  busy: boolean;
 };
 function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
   const game = useRef(new O.Game(new O.State(config)));
@@ -23,6 +24,7 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
     record: game.current.state.record,
     config: config,
     bots: [null, null],
+    busy: game.current.busy,
   });
   const update = () => {
     setView({
@@ -31,6 +33,7 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
       record: game.current.state.record,
       config: game.current.state.config,
       bots: game.current.bots,
+      busy: game.current.busy,
     });
   };
   if (
@@ -42,13 +45,30 @@ function useOroroReducer(config: O.Config): [GameState, (a: Action) => void] {
   }
   const action = (action: Action) => {
     if (action.type === "play") {
-      game.current.play({
-        pos: action.pos,
-        posTo: action.posTo,
-        first: action.first,
-        pass: action.pass,
-      });
-      update();
+      game.current.play(
+        {
+          pos: action.pos,
+          posTo: action.posTo,
+          first: action.first,
+          pass: action.pass,
+        },
+        (bot, back) => {
+          if (bot) {
+            setTimeout(() => {
+              update();
+              setTimeout(() => back(), 4000);
+            }, 200);
+          } else {
+            setTimeout(() => {
+              update();
+              update();
+              setTimeout(() => {
+                back();
+              }, 1);
+            }, 1);
+          }
+        }
+      );
     } else if (action.type === "init") {
       game.current = new O.Game(new O.State(config), action.bots);
       update();
@@ -76,8 +96,8 @@ export function Ororo({}) {
   const firstBot = state.bots[0] !== null;
   const secondBot = state.bots[1] !== null;
   const msgBot = (f, s) => (firstBot ? f : secondBot ? s : "");
-  const winMsg = "あなたの勝ち";
-  const loseMsg = "あなたの負け";
+  const winMsg = " あなたの勝ち🎉";
+  const loseMsg = " あなたの負け";
   const winnerMsg =
     state.view.result === O.Piece.First
       ? msgBot(loseMsg, winMsg)
@@ -85,11 +105,12 @@ export function Ororo({}) {
       ? msgBot(winMsg, loseMsg)
       : "";
   const pointMsg = `黒 ${state.view.scores[0]} - ${state.view.scores[1]} 白`;
+  const botMsg = state.busy ? `Botの考慮中... ` : "";
 
   const message =
     state.view.result === O.Piece.Blank ? (
       <>
-        {state.first ? "先手黒" : "後手白"}陣営の手番。{" "}
+        {state.first ? "先手黒" : "後手白"}陣営の手番。{botMsg}
         {notStarted ? "盤面クリックでスタート" : pointMsg}
       </>
     ) : state.view.result === O.Piece.Draw ? (
@@ -108,7 +129,7 @@ export function Ororo({}) {
         onClick={() =>
           action({
             type: "init",
-            bots: [null, O.RandomAgent],
+            bots: [null, O.createMCTSAgent(10)],
           })
         }
         disabled={state.bots[1] != null}
@@ -119,7 +140,7 @@ export function Ororo({}) {
         onClick={() =>
           action({
             type: "init",
-            bots: [O.RandomAgent, null],
+            bots: [O.createMCTSAgent(10), null],
           })
         }
         disabled={state.bots[0] != null}
@@ -161,7 +182,12 @@ export function Ororo({}) {
         disable={!notStarted}
       ></RuleSelector>
       <p>{message}</p>
-      <Player view={state.view} action={action} first={state.first}></Player>
+      <Player
+        view={state.view}
+        action={action}
+        first={state.first}
+        busy={state.busy}
+      ></Player>
       <style jsx>{`
         .cont {
           margin-block-end: 1rem;
@@ -201,6 +227,8 @@ function RuleText({ rule }: { rule: string }) {
           並びの先に <em>{setYouMe(rule[4], rule[5])}</em> があれば、
           <em>{turn(rule[4], rule[5])}</em>。これらを実行できる。
         </li>
+        <li>注: ゲーム性は保証しません。</li>
+
         <li>
           <A href="http://kusabazyun.banjoyugi.net/Home/reproductioned/fairy/oserobarieshon">
             参考: オセロバリエーション紹介 -

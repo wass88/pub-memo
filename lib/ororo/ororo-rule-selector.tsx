@@ -41,7 +41,7 @@ export function RuleSelector({
   disable: boolean;
 }) {
   return (
-    <div className={`selector ${disable ? "disable" : "enable"}`}>
+    <span className={`selector ${disable ? "disable" : "enable"}`}>
       <span>{ruleKana(rule)}</span>:
       {rule.split("").map((c, i) => {
         const rotOE = (c) => (c === "O" ? "E" : "O");
@@ -67,6 +67,9 @@ export function RuleSelector({
         .selector {
           font-size: 200%;
         }
+        .selector:hover {
+          background-color: rgba(255 255 255 / 0.1);
+        }
         .enable .char:not(.char0) {
           cursor: pointer;
           user-select: none;
@@ -80,6 +83,6 @@ export function RuleSelector({
           margin-left: 1rem;
         }
       `}</style>
-    </div>
+    </span>
   );
 }

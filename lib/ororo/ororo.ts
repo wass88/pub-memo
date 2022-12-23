@@ -24,42 +24,42 @@ const d8 = [
 ];
 export type Rule =
   | {
-    ruleStr: string;
-    type: "normal";
-    put: boolean;
-    reach: Piece;
-    reachTo: Piece;
-    set: boolean;
-    setTo: boolean;
+      ruleStr: string;
+      type: "normal";
+      put: boolean;
+      reach: Piece;
+      reachTo: Piece;
+      set: boolean;
+      setTo: boolean;
 
-    // _O SE RO
-    // Put Own on Empty
-    // Set Enemy
-    // Reverse To Own
-  }
+      // _O SE RO
+      // Put Own on Empty
+      // Set Enemy
+      // Reverse To Own
+    }
   | {
-    ruleStr: string;
-    type: "sandwich";
-    put: boolean;
-    putTo: boolean;
-    sand: Piece;
-    set: boolean;
-  }
+      ruleStr: string;
+      type: "sandwich";
+      put: boolean;
+      putTo: boolean;
+      sand: Piece;
+      set: boolean;
+    }
   | {
-    ruleStr: string;
-    type: "extend";
-    put: boolean;
-    putIn: boolean;
-    reachTo: Piece;
-    set: boolean;
-  }
+      ruleStr: string;
+      type: "extend";
+      put: boolean;
+      putIn: boolean;
+      reachTo: Piece;
+      set: boolean;
+    }
   | {
-    ruleStr: string;
-    type: "fill";
-    put: boolean;
-    putIn: boolean;
-    putTo: boolean;
-  };
+      ruleStr: string;
+      type: "fill";
+      put: boolean;
+      putIn: boolean;
+      putTo: boolean;
+    };
 
 export function createRule(ruleStr: string): Rule {
   const [l, ls, m, ms, r, rs] = ruleStr.split("");
@@ -136,13 +136,13 @@ export function createRule(ruleStr: string): Rule {
 }
 
 export type ruleAgent = {
-  playBy: ((
+  playBy: (
     board: Piece[][],
     size: number,
     pos: [number, number],
     first: boolean
-  ) => { put: [number, number, Piece][]; set: [number, number][] })
-}
+  ) => { put: [number, number, Piece][]; set: [number, number][] };
+};
 const seekD8 = (
   y: number,
   x: number,
@@ -163,15 +163,15 @@ const seekD8 = (
     for (let i = 0; i < size + 1; i++) {
       [ny, nx] = [ny + dy, nx + dx];
       if (pieceIn === pieceTo) {
-        if (
-          !inSize(ny, nx, size) || board[ny][nx] !== pieceIn) {
+        if (!inSize(ny, nx, size) || board[ny][nx] !== pieceIn) {
           if (rev.length >= 2) return rev;
           return [];
         }
         rev.push([ny, nx]);
       } else {
         if (
-          !inSize(ny, nx, size) || (board[ny][nx] !== pieceIn && board[ny][nx] !== pieceTo)
+          !inSize(ny, nx, size) ||
+          (board[ny][nx] !== pieceIn && board[ny][nx] !== pieceTo)
         ) {
           return [];
         }
@@ -217,8 +217,10 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
             swapIf(rule.reachTo, first)
           ).flatMap((rev) => {
             if (rev.length >= 2) settable = true;
-            return [...(rule.set ? rev.slice(0, -1) : []),
-            ...(rev.length > 0 && rule.setTo ? [rev[rev.length - 1]] : [])];
+            return [
+              ...(rule.set ? rev.slice(0, -1) : []),
+              ...(rev.length > 0 && rule.setTo ? [rev[rev.length - 1]] : []),
+            ];
           });
           if (!settable) {
             return { put: [], set: [] };
@@ -235,23 +237,39 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
           ];
 
           let settable = false;
-          const { put, set } = seekD8(y, x, board, size, Piece.Blank, swapIf(rule.reachTo, first))
-            .reduce(({ put, set }, rev) => {
+          const { put, set } = seekD8(
+            y,
+            x,
+            board,
+            size,
+            Piece.Blank,
+            swapIf(rule.reachTo, first)
+          ).reduce(
+            ({ put, set }, rev) => {
               if (rev.length >= 2) settable = true;
               return {
-                put: [...put,
-                ...rev.slice(0, -1).map(([y, x]) => [y, x, swapIf(rule.putIn ? Piece.First : Piece.Second, first)])],
-                set: [...set, ...rev.slice(-2, -1).filter(() => rule.set)]
-              }
-            }
-              , { put: pos_put, set: [] });
+                put: [
+                  ...put,
+                  ...rev
+                    .slice(0, -1)
+                    .map(([y, x]) => [
+                      y,
+                      x,
+                      swapIf(rule.putIn ? Piece.First : Piece.Second, first),
+                    ]),
+                ],
+                set: [...set, ...rev.slice(-2, -1).filter(() => rule.set)],
+              };
+            },
+            { put: pos_put, set: [] }
+          );
 
           if (!settable) {
             return { put: [], set: [] };
           }
           return { put: put as [number, number, Piece][], set };
-        }
-      }
+        },
+      };
     case "sandwich":
       return {
         playBy(board, size, [y, x], first) {
@@ -260,23 +278,39 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
             [y, x, swapIf(firstPiece(rule.put), first)],
           ];
           let settable = false;
-          const { put, set } = seekD8(y, x, board, size, swapIf(firstPiece(rule.set), first), Piece.Blank)
-            .reduce(({ put, set }, rev) => {
+          const { put, set } = seekD8(
+            y,
+            x,
+            board,
+            size,
+            swapIf(firstPiece(rule.set), first),
+            Piece.Blank
+          ).reduce(
+            ({ put, set }, rev) => {
               if (rev.length >= 2) settable = true;
               return {
-                put: [...put,
-                ...rev.slice(-1).map(([y, x]) => [y, x, swapIf(firstPiece(rule.putTo), first)])],
-                set: [...set, ...rev.slice(0, -1).filter(() => rule.set)]
-              }
-            }
-              , { put: pos_put, set: [] });
+                put: [
+                  ...put,
+                  ...rev
+                    .slice(-1)
+                    .map(([y, x]) => [
+                      y,
+                      x,
+                      swapIf(firstPiece(rule.putTo), first),
+                    ]),
+                ],
+                set: [...set, ...rev.slice(0, -1).filter(() => rule.set)],
+              };
+            },
+            { put: pos_put, set: [] }
+          );
 
           if (!settable) {
             return { put: [], set: [] };
           }
           return { put: put as [number, number, Piece][], set };
-        }
-      }
+        },
+      };
     case "fill":
       return {
         playBy(board, size, [y, x], first) {
@@ -285,31 +319,53 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
             [y, x, swapIf(firstPiece(rule.put), first)],
           ];
           let settable = false;
-          const { put, set } = seekD8(y, x, board, size, Piece.Blank, Piece.Blank)
-            .reduce(({ put, set }, rev) => {
+          const { put, set } = seekD8(
+            y,
+            x,
+            board,
+            size,
+            Piece.Blank,
+            Piece.Blank
+          ).reduce(
+            ({ put, set }, rev) => {
               if (rev.length >= 2) settable = true;
               return {
-                put: [...put,
-                ...rev.slice(-1).map(([y, x]) => [y, x, swapIf(firstPiece(rule.putTo), first)]),
-                ...rev.slice(0, -1).map(([y, x]) => [y, x, swapIf(firstPiece(rule.putIn), first)]),
+                put: [
+                  ...put,
+                  ...rev
+                    .slice(-1)
+                    .map(([y, x]) => [
+                      y,
+                      x,
+                      swapIf(firstPiece(rule.putTo), first),
+                    ]),
+                  ...rev
+                    .slice(0, -1)
+                    .map(([y, x]) => [
+                      y,
+                      x,
+                      swapIf(firstPiece(rule.putIn), first),
+                    ]),
                 ],
-                set: [...set]
-              }
-            }
-              , { put: pos_put, set: [] });
+                set: [...set],
+              };
+            },
+            { put: pos_put, set: [] }
+          );
 
           if (!settable) {
             return { put: [], set: [] };
           }
           return { put: put as [number, number, Piece][], set };
+        },
+      };
+  }
+};
 
-        }
-      }
-
-  };
-}
-
-export function initPiece(cross: boolean, size: number): [Piece, number, number][] {
+export function initPiece(
+  cross: boolean,
+  size: number
+): [Piece, number, number][] {
   let center = Math.floor((size - 1) / 2);
   if (cross) {
     return [
@@ -354,11 +410,12 @@ export type View = {
   result: Piece;
   playable: Action[];
   playChange: {
-    put: [number, number, Piece][], set: [number, number][]
+    put: [number, number, Piece][];
+    set: [number, number][];
   }[][];
   lastPut: [number, number][];
   lastSet: [number, number][];
-}
+};
 
 export class State {
   config: Config;
@@ -380,8 +437,8 @@ export class State {
       this.board[y][x] = piece;
     });
     this.rule = ruleToAgent(config.rule);
-    this.lastPut = []
-    this.lastSet = []
+    this.lastPut = [];
+    this.lastSet = [];
   }
   playable(): Action[] {
     const actions = this.playableBy(this.first);
@@ -410,12 +467,12 @@ export class State {
     const { put, set } = this.checkReverse(act);
     put.forEach(([y, x, p]) => {
       this.board[y][x] = p;
-      this.lastPut.push([y, x])
+      this.lastPut.push([y, x]);
     });
     set.forEach(([y, x]) => {
       this.board[y][x] =
         this.board[y][x] === Piece.Second ? Piece.First : Piece.Second;
-      this.lastSet.push([y, x])
+      this.lastSet.push([y, x]);
     });
     this.first = !this.first;
     return {
@@ -441,7 +498,7 @@ export class State {
       playable: this.playable(),
       playChange: this.playChange(),
       lastPut: this.lastPut,
-      lastSet: this.lastSet
+      lastSet: this.lastSet,
     };
   }
   scores(): [number, number] {
@@ -503,7 +560,7 @@ export class State {
       Array.from(Array(this.config.boardSize)).map((_, x) =>
         this.checkReverse({ pos: [y, x], first: this.first, pass: false })
       )
-    )
+    );
   }
   boardStr(): string {
     return this.board
@@ -514,43 +571,110 @@ export class State {
       )
       .join("\n");
   }
+  clone(): State {
+    const state = new State(this.config);
+    state.record = this.record.slice();
+    state.first = this.first;
+    state.board = this.board.map((row) => row.slice());
+    state.rule = this.rule;
+    state.lastPut = this.lastPut.slice();
+    state.lastSet = this.lastSet.slice();
+    return state;
+  }
 }
 
 export type Agent = {
   name: string;
-  action: (state: State) => Action;
+  action: (state: State) => Promise<Action>;
 } | null;
 
 export class Game {
   state: State;
   bots: [Agent, Agent];
+  busy: boolean; // for timeout of bot;
   constructor(state: State, bots: [Agent, Agent] = [null, null]) {
     this.state = state;
     this.bots = bots;
     if (bots[0] != null) {
       let action = this.bots[0].action(this.state);
-      this.state.play(action);
+      action.then((action) => this.state.play(action));
     }
+    this.busy = false;
   }
-  play(action: Action) {
+  play(action: Action, update: (bot: boolean, back: () => void) => void) {
     this.state.play(action);
-    if (this.state.end()) return;
+    if (this.state.end()) {
+      update(false, () => {});
+      return;
+    }
+    const playBot = (i) => {
+      setTimeout(() => {
+        this.busy = true;
+        update(false, () => {
+          let action = this.bots[i].action(this.state);
+          action.then((action) => {
+            this.state.play(action);
+            this.busy = false;
+            update(true, () => {});
+          });
+        });
+      }, 1);
+    };
     if (this.state.first && this.bots[0] != null) {
-      let action = this.bots[0].action(this.state);
-      this.state.play(action);
+      playBot(0);
     } else if (!this.state.first && this.bots[1] != null) {
-      let action = this.bots[1].action(this.state);
-      this.state.play(action);
+      playBot(1);
+    } else {
+      update(false, () => {});
     }
   }
 }
 
 export const RandomAgent = {
   name: "random",
-  action(state: State): Action {
+  async action(state: State): Promise<Action> {
     const playable = state.playable();
     if (playable.length === 0) return null;
     const i = 0 | (Math.random() * playable.length);
     return playable[i];
   },
+};
+
+async function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export const createMCTSAgent = (playout) => {
+  return {
+    name: "mcts",
+    async action(state: State): Promise<Action> {
+      const me = state.first ? Piece.First : Piece.Second;
+      const playable = state.playable();
+
+      if (playable.length === 0) return null;
+
+      const winTimes = [];
+      for (let act of playable) {
+        await wait(50);
+        let winTime = 0;
+        for (let i = 0; i < playout; i++) {
+          const clone = state.clone();
+          clone.play(act);
+          while (!clone.end()) {
+            const actions = clone.playable();
+            const index = 0 | (Math.random() * actions.length);
+            clone.play(actions[index]);
+          }
+          if (clone.winner() === me) {
+            winTime += 1;
+          }
+        }
+        winTimes.push(winTime);
+      }
+      const max = winTimes
+        .map((n, i) => [n, i])
+        .filter(([n, i]) => n === Math.max(...winTimes))[0][1];
+      return playable[max];
+    },
+  };
 };

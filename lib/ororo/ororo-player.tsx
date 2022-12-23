@@ -18,13 +18,14 @@ export function Player({
   view,
   action,
   first,
+  busy,
 }: {
   view: O.View;
   action: (action: Action) => void;
   first: boolean;
+  busy: boolean;
 }) {
   const [cursor, setCursor] = useState(() => null);
-  console.log(view.playChange);
   return (
     <>
       <div
@@ -42,11 +43,12 @@ export function Player({
               {row.map((piece, x) => {
                 const playable = playableIn(view.playable, y, x);
                 const onClick = () => {
-                  if (playable) {
+                  if (!busy && playable) {
                     action({ type: "play", pos: [y, x], first, pass: false });
                   }
                 };
-                const cursorActive = cursor && cursor[0] == y && cursor[1] == x;
+                const cursorActive =
+                  !busy && cursor && cursor[0] == y && cursor[1] == x;
                 const enterCursor = () => {
                   setCursor([y, x]);
                 };
@@ -59,10 +61,9 @@ export function Player({
                 let readyPut = false;
                 let readySet = false;
                 let readyPutPiece = piece;
-                if (cursor) {
+                if (!busy && cursor) {
                   for (let [py, px, p] of view.playChange[cursor[0]][cursor[1]]
                     .put) {
-                    console.log({ py, px });
                     readyPut = py == y && px == x;
                     if (readyPut) {
                       readyPutPiece = p;
@@ -91,13 +92,20 @@ export function Player({
                           )} ${lastSet ? "flip" : ""} ${
                             readyPut ? "ready-put" : ""
                           } ${readySet ? "ready-set" : ""}`}
-                        ></div>
+                        >
+                          {resultStr(readyPutPiece)[0]}
+                          {lastSet ? "!" : ""}
+                          {readyPut ? "P" : ""}
+                        </div>
                         {/* WORKAROUND ひっくり返す例示のときに別要素で */}
                         <div
                           className={`piece set ${resultStr(readyPutPiece)} ${
                             readySet ? "ready-set" : ""
                           }`}
-                        ></div>
+                        >
+                          {resultStr(readyPutPiece)[0]}
+                          {readySet ? "S" : ""}
+                        </div>
                       </>
                     ) : (
                       <></>
@@ -133,7 +141,6 @@ export function Player({
           .row:last-child {
             margin-bottom: 0;
           }
-
           .cell {
             --size: 64px;
             width: var(--size);
