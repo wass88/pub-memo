@@ -283,7 +283,7 @@ export const ruleToAgent = (rule: Rule): ruleAgent => {
             x,
             board,
             size,
-            swapIf(firstPiece(rule.set), first),
+            swapIf(rule.sand, first),
             Piece.Blank
           ).reduce(
             ({ put, set }, rev) => {
