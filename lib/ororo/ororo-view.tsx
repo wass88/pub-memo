@@ -252,7 +252,7 @@ function RuleText({ rule }: { rule: string }) {
             ボードゲーム・パズルプログラミング Advent Calendar 2022の20日目。
           </A>
           <ul>
-            <li>ボードゲームのメタ実装として、プログラミングに関係する。</li>
+            <li>ボードゲーム生成プログラミングということで登録。</li>
           </ul>
         </li>
       </ul>
