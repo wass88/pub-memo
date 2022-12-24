@@ -42,7 +42,7 @@ export function RuleSelector({
 }) {
   return (
     <span className={`selector ${disable ? "disable" : "enable"}`}>
-      <span>{ruleKana(rule)}</span>:
+      <span>{ruleKana(rule)}</span> (
       {rule.split("").map((c, i) => {
         const rotOE = (c) => (c === "O" ? "E" : "O");
         const rot_SR = (c) => (c === "_" ? "S" : c === "S" ? "R" : "_");
@@ -63,6 +63,7 @@ export function RuleSelector({
           </span>
         );
       })}
+      )
       <style jsx>{`
         .selector {
           font-size: 200%;
@@ -81,6 +82,9 @@ export function RuleSelector({
         .char2,
         .char4 {
           margin-left: 1rem;
+        }
+        .char5 {
+          margin-right: 1rem;
         }
       `}</style>
     </span>

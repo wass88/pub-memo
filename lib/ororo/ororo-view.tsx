@@ -239,7 +239,7 @@ function RuleText({ rule }: { rule: string }) {
             _OSESO: "つまり、オセロっぽいけど、挟む自分の石もひっくり返す。",
           }[rule];
           if (special) return <li>{special}</li>;
-          else <li>注: ゲーム性は保証しません。</li>;
+          else return <li>注: ゲーム性は保証しません。</li>;
         })()}
 
         <li>
