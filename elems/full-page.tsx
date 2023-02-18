@@ -120,7 +120,7 @@ export default function FullPage({ children }) {
         }
         h2 {
           font-size: 200%;
-          text-shadow: 1px 1px var(--sub-dark-color);
+          text-shadow: 1px 1px var(--sub-darker-color);
           margin-top: 10px;
           margin-bottom: 6px;
         }
