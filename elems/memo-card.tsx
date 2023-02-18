@@ -12,42 +12,34 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
           <Tags tags={memo.tags}></Tags>
           <style jsx>{`
             .card {
-              background: var(--fg-color);
-              width: calc((960px - 16px) / 2);
+              width: calc((960px - 3rem) / 2);
               height: 100%;
               border-radius: 12px;
-              color: var(--sub-darker-color);
               cursor: pointer;
-              padding: 0 12px 12px 12px;
               display: flex;
               flex-flow: column;
               position: relative;
+
+              box-shadow: -2px 0 var(--main-color), -4px 0 #000,
+                -8px 0 var(--main-color), 2px 0 var(--main-color), 4px 0 #000,
+                8px 0 var(--main-color), -2px 1px var(--main-color) inset,
+                2px 1px var(--main-color) inset,
+                -2px -1px var(--main-color) inset,
+                2px -1px var(--main-color) inset;
+              padding: 1rem 3rem 1rem 3rem;
             }
             .card h2 {
-              margin: 0 -12px 0 -12px;
-              line-height: 1.25;
-              background: var(--sub-dark-color);
-              padding: 16px;
-              border-radius: 12px 12px 0 0;
-              color: var(--fg-color);
-              font-weight: bold;
-              text-shadow: 1px 1px var(--sub-darker-color),
-                -1px -1px var(--sub-darker-color),
-                1px -1px var(--sub-darker-color),
-                -1px 1px var(--sub-darker-color),
-                1px 0px var(--sub-darker-color),
-                -1px 0px var(--sub-darker-color),
-                0px -1px var(--sub-darker-color),
-                0px 1px var(--sub-darker-color);
-              box-shadow: 0px 1px 1px var(--sub-darker-color);
+              color: var(--sub-lighter-color);
+              padding: 0;
+              margin: 0;
+              line-height: 1.5;
             }
             .card:hover {
               transform: translate(2px, 2px);
             }
             p {
-              margin: 12px 5px;
-              opacity: 80%;
-              padding-bottom: 36px;
+              margin: 1rem 0 2.5rem 0;
+              opacity: 95%;
               font-weight: bold;
             }
             @media screen and (max-width: 960px) {
@@ -66,7 +58,7 @@ export function Tags({ tags }) {
   return (
     <div className="tags">
       {tags.map((tag) => (
-        <object key={tag}>
+        <object className="chip-cont" key={tag}>
           <Link href={`/tags/${tag}`} passHref>
             <a>
               <div className="chip">{tag}</div>
@@ -80,22 +72,13 @@ export function Tags({ tags }) {
           flex-flow: row wrap;
           gap: 8px;
           position: absolute;
-          bottom: 16px;
+          bottom: 1rem;
         }
         .chip {
-          padding: 2px 16px;
+          color: var(--sub-lighter-color);
           font-weight: bold;
-          border-radius: 24px;
-          color: var(--fg-color);
-          text-shadow: 1px 1px var(--sub-darker-color),
-            -1px -1px var(--sub-darker-color), 1px -1px var(--sub-darker-color),
-            -1px 1px var(--sub-darker-color), 1px 0px var(--sub-darker-color),
-            -1px 0px var(--sub-darker-color), 0px -1px var(--sub-darker-color),
-            0px 1px var(--sub-darker-color);
-          background: var(--sub-dark-color);
-          box-shadow: 0px 1px 1px var(--sub-darker-color);
         }
-        .chip:hover {
+        .chip-cont:hover {
           transform: scale(1.1);
         }
       `}</style>
@@ -114,7 +97,7 @@ export function MemoList({ memos }: { memos: BlogPage[] }) {
           width: 100%;
           display: flex;
           flex-flow: row wrap;
-          gap: 16px;
+          gap: 2rem 3rem;
         }
         @media screen and (max-width: 960px) {
           .column {
