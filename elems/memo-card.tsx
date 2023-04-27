@@ -9,7 +9,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
         <div className="card">
           <h2>{memo.title}</h2>
           <p>{memo.summary}</p>
-          <Tags tags={memo.tags}></Tags>
+          <Tags tags={memo.tags} icon={memo.icon || "⭐"}></Tags>
           <style jsx>{`
             .card {
               width: calc((960px - 3rem) / 2);
@@ -55,7 +55,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
   );
 }
 
-export function Tags({ tags }) {
+export function Tags({ tags, icon }) {
   return (
     <div className="tags">
       {tags.map((tag) => (
@@ -67,6 +67,7 @@ export function Tags({ tags }) {
           </Link>
         </object>
       ))}
+      <div className="icon">{icon || "⭐"}</div>
       <style jsx>{`
         .tags {
           display: flex;
@@ -74,6 +75,9 @@ export function Tags({ tags }) {
           gap: 8px;
           position: absolute;
           bottom: 1rem;
+          left: 3rem;
+          right: 3rem;
+          align-items: flex-end;
         }
         .chip {
           color: var(--sub-lighter-color);
@@ -81,6 +85,10 @@ export function Tags({ tags }) {
         }
         .chip-cont:hover {
           transform: scale(1.1);
+        }
+        .icon {
+          margin-left: auto;
+          font-size: 1.5rem;
         }
       `}</style>
     </div>

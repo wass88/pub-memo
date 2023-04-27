@@ -8,4 +8,5 @@ export type BlogPage = {
   summary: string;
   body: React.FC;
   tags: string[];
+  icon?: string;
 };

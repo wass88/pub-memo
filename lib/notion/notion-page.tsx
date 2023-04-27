@@ -108,5 +108,6 @@ export function blogFromNotion(page: NotionPage): BlogPage {
     summary: page.summary,
     body,
     tags: page.tags,
+    icon: page.icon,
   };
 }
