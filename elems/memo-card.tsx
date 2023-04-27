@@ -89,6 +89,7 @@ export function Tags({ tags, icon }) {
         .icon {
           margin-left: auto;
           font-size: 1.5rem;
+          margin-bottom: -0.3rem;
         }
       `}</style>
     </div>
