@@ -25,6 +25,11 @@ export default function Home({ notion }) {
 
       <a href="https://wass80.xyz">
         <h1>メモ書き</h1>
+        <style jsx>{`
+          h1 {
+            margin-bottom: 0.4rem;
+          }
+        `}</style>
       </a>
       <MemoList memos={memos.getAll()}></MemoList>
     </FullPage>
