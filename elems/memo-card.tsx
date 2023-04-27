@@ -33,6 +33,7 @@ export function MemoCard({ memo }: { memo: BlogPage }) {
               padding: 0;
               margin: 0;
               line-height: 1.5;
+              font-size: 1.5rem;
             }
             .card:hover {
               transform: translate(2px, 2px);
