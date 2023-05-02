@@ -253,6 +253,8 @@ async function appendBookmarkMeta(page: NotionPage) {
     const meta = await urlMetadata(link);
     value.properties.title = [[meta["og:title"] as string]];
     value.properties.description = [[meta.description as string]];
-    console.log(link, meta);
+    if (meta["og:image"] !== "") {
+      value.format.bookmark_cover = meta["og:image"] as string;
+    }
   }
 }
