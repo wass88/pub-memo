@@ -1,8 +1,9 @@
 import { BlogPage, IDString } from "../memo-types";
-import { ExtendedRecordMap, SearchParams, SearchResults } from "notion-types";
+import { BaseDecoration } from "notion-types";
 import { Client } from "@notionhq/client";
 import { NotionCompatAPI } from "notion-compat";
 import { NotionPage } from "./notion-page";
+import urlMetadata from "url-metadata";
 
 import fs, { WriteStream } from "fs";
 
@@ -61,6 +62,7 @@ async function getDatabase(id: string): Promise<NotionPage[]> {
   await Promise.all(
     pages.map(async (page) => {
       await replaceImagesInPage(page);
+      await appendBookmarkMeta(page);
     })
   );
   return pages;
@@ -76,11 +78,9 @@ async function replaceImagesInPage(page) {
       if (value.type !== "image") {
         return;
       }
-      console.dir(value.properties);
       const src = value.properties.source[0][0];
       const local = await downloadImage(src);
       value.properties.source[0][0] = local;
-      console.dir(value.properties);
     })
   );
 }
@@ -242,4 +242,17 @@ export async function fetchNotionPage(id: IDString): Promise<NotionPage[]> {
       recordMap: page.id === id ? page.recordMap : null,
     };
   });
+}
+
+async function appendBookmarkMeta(page: NotionPage) {
+  const block = page.recordMap.block;
+  for (const record of Object.keys(block)) {
+    const value = block[record].value;
+    if (value.type !== "bookmark") continue;
+    const link = value.properties.link[0][0];
+    const meta = await urlMetadata(link);
+    value.properties.title = [[meta["og:title"] as string]];
+    value.properties.description = [[meta.description as string]];
+    console.log(link, meta);
+  }
 }
