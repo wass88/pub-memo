@@ -68,7 +68,11 @@ const Equation: React.FC<{
         className
       )}
     >
-      <Katex math={math} settings={katexSettings} {...rest} />
+      <Katex
+        math={math}
+        settings={{ ...katexSettings, displayMode: !inline }}
+        {...rest}
+      />
     </span>
   );
 };
