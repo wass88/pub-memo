@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://memo.wass80.xyz
+
+# Sitemaps
+Sitemap: https://memo.wass80.xyz/sitemap.xml
