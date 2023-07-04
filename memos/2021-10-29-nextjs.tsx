@@ -31,6 +31,12 @@ x.map(a =>  a * a);
         \\,d\\xi
       `}</Math>
       <Img src={require("./2021-10-29/cat.jpeg?trace")} alt="cat" block></Img>
+      <h2>見出し1</h2>
+      <p>テキスト</p>
+      <h3>見出し2</h3>
+      <p>テキスト</p>
+      <h4>見出し3</h4>
+      <p>テキスト</p>
     </>
   );
 };
