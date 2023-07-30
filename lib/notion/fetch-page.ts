@@ -13,6 +13,7 @@ export const notionCompat = new NotionCompatAPI(notion);
 const BlogID = process.env.NOTION_BLOG_ID;
 
 async function respToPage(result): Promise<NotionPage> {
+  console.log("respToPage: ", result.id);
   function notionPageID(date: string, id: string): IDString {
     return `${date.substring(0, 10)}-${id}` as IDString;
   }
@@ -39,6 +40,12 @@ async function getDatabase(id: string): Promise<NotionPage[]> {
   let i = 10;
   let cursor = undefined;
   while (i-- > 0) {
+    console.log(
+      "getDatabase fetch retry: ",
+      9 - i,
+      "cursor: ",
+      cursor ?? "none"
+    );
     const resp = await notion.databases.query({
       database_id: id,
       filter: {
@@ -59,12 +66,20 @@ async function getDatabase(id: string): Promise<NotionPage[]> {
     cursor = resp.next_cursor;
   }
   const pages = await Promise.all(results);
+  console.log("getDatabase fetch end: ", pages.length);
+  console.log("getDatabase replaceImagesInPage");
   await Promise.all(
     pages.map(async (page) => {
       await replaceImagesInPage(page);
+    })
+  );
+  console.log("getDatabase appendBookmarkMeta");
+  await Promise.all(
+    pages.map(async (page) => {
       await appendBookmarkMeta(page);
     })
   );
+  console.log("getDatabase Added Bookmark Meta: ", pages.length);
   return pages;
 }
 
@@ -147,6 +162,7 @@ const notionCacheFileLock = "./.next/cache/my-notion.json.lock";
 const cacheActiveTime = 1000 * 60 * 30; // 30min Cache
 
 function saveCache(pages: NotionPage[]): Promise<null> {
+  console.log("saveCache", pages.length);
   const cache = JSON.stringify(pages);
   return new Promise((ok, ng) => {
     fs.writeFile(notionCacheFile, cache, (err) => {
@@ -207,22 +223,21 @@ export function fetchNotion(): Promise<NotionPage[]> {
             }
           });
 
-        cacheOK().then((c) => {
+        (async function () {
+          const c = await cacheOK();
           if (c) {
             console.log("fetchNotion: Using cached pages");
             release();
             ok(loadCache());
           } else {
             console.warn("fetchNotion: Fetching Notion pages");
-            getDatabase(BlogID).then((pages) => {
-              saveCache(pages).then(() => {
-                console.log(`fetchNotion: Fetched ${pages.length} pages`);
-                release();
-                ok(pages);
-              });
-            });
+            const pages = await getDatabase(BlogID);
+            await saveCache(pages);
+            console.log(`fetchNotion: Fetched ${pages.length} pages`);
+            release();
+            ok(pages);
           }
-        });
+        })();
       }
     );
   });
@@ -244,17 +259,28 @@ export async function fetchNotionPage(id: IDString): Promise<NotionPage[]> {
   });
 }
 
+const links = new Set();
 async function appendBookmarkMeta(page: NotionPage) {
   const block = page.recordMap.block;
   for (const record of Object.keys(block)) {
     const value = block[record].value;
     if (value.type !== "bookmark") continue;
     const link = value.properties.link[0][0];
-    const meta = await urlMetadata(link);
+    links.add(link);
+    //console.log(`appendBookmarkMeta: ${Array.from(links)}`);
+    var meta;
+    try {
+      meta = await urlMetadata(link, { timeout: 5000 });
+    } catch (e) {
+      console.error(`appendBookmarkMeta: ${e}`);
+      continue;
+    }
     value.properties.title = [[meta["og:title"] as string]];
     value.properties.description = [[meta.description as string]];
     if (meta["og:image"] !== "") {
       value.format.bookmark_cover = meta["og:image"] as string;
     }
+    links.delete(link);
+    //console.log(`appendBookmarkMeta: ${Array.from(links)}`);
   }
 }
