@@ -42,7 +42,7 @@ const Tweet = ({ id }: { id: string }) => {
   return <TweetEmbed tweetId={id} />;
 };
 
-import Katex from "@matejmazur/react-katex";
+import Katex from "katex";
 import { EquationBlock } from "notion-types";
 
 const katexSettings = {
@@ -60,20 +60,21 @@ const Equation: React.FC<{
   math = math || getBlockTitle(block, recordMap);
   if (!math) return null;
 
+  // Note: this is not reactive.
+  const innerHTML = Katex.renderToString(math, {
+    displayMode: !inline,
+  });
+  const Component = inline ? "span" : "div";
+
   return (
-    <span
+    <Component
       className={cs(
         "notion-equation",
         inline ? "notion-equation-inline" : "notion-equation-block",
         className
       )}
-    >
-      <Katex
-        math={math}
-        settings={{ ...katexSettings, displayMode: !inline }}
-        {...rest}
-      />
-    </span>
+      dangerouslySetInnerHTML={{ __html: innerHTML }}
+    ></Component>
   );
 };
 
