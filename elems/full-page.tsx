@@ -120,7 +120,6 @@ export default function FullPage({ children }) {
         }
         h2 {
           font-size: 200%;
-          text-shadow: 1px 1px var(--sub-darker-color), -1px -1px red;
           margin-top: 10px;
           margin-bottom: 6px;
         }
@@ -160,6 +159,15 @@ export default function FullPage({ children }) {
         }
         ul > ul {
           margin-block-end: 0;
+        }
+        img {
+          max-width: 640px;
+        }
+        figure > div {
+          align-items: center;
+        }
+        .notion-row {
+          margin-bottom: 16px;
         }
       `}</style>
     </div>
