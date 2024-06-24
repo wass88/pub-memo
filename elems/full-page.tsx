@@ -117,6 +117,7 @@ export default function FullPage({ children }) {
           color: transparent;
           margin-top: -8px;
           margin-bottom: -36px;
+          font-feature-settings: "palt";
         }
         h2 {
           font-size: 200%;
