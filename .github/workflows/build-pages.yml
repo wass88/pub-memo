@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
   schedule:
     - cron: '0 0/4 * * *'
 jobs:
@@ -33,4 +34,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: out
-        if: github.event_name == 'push' || env.LOCAL_LAST != env.REMOTE_LAST
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || env.LOCAL_LAST != env.REMOTE_LAST
